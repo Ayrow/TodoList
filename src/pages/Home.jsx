@@ -7,7 +7,7 @@ const Home = () => {
   return (
     <div>
       <div>
-        <h1>Todo List</h1>
+        <h1>Nothing here yet</h1>
       </div>
     </div>
   );

@@ -1,62 +1,30 @@
-import {
-  addDoc,
-  arrayUnion,
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  onSnapshot,
-  setDoc,
-  updateDoc,
-} from 'firebase/firestore';
-import { useEffect, useState } from 'react';
-import { auth, db } from '../utils/firebase-config';
+import { useContext, useEffect, useState } from 'react';
+import { TodolistContext } from '../contexts/TodolistContext';
 
 const TodoList = () => {
-  const [todo, setTodo] = useState('');
-  const [todoArray, setTodoArray] = useState([]);
-
-  const fetchTodos = async () => {
-    const docRef = doc(db, 'todos', auth.currentUser.uid);
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      return setTodoArray(docSnap.data().todos);
-    } else {
-      console.log('No such document!');
-      return;
-    }
-  };
+  const { dispatch, fetchTodos, addTodo, todoArray, ...state } =
+    useContext(TodolistContext);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!todo) {
-      alert('please add Todo');
+    if (!state.todo) {
+      dispatch({ type: 'MISSING_TODO' });
     } else {
-      const addTodo = async () => {
-        const todosRef = doc(db, 'todos', auth.currentUser.uid);
-        const docSnap = await getDoc(todosRef);
-        if (docSnap.exists()) {
-          await updateDoc(todosRef, {
-            todos: arrayUnion(todo),
-          });
-        } else {
-          await setDoc(todosRef, {
-            todos: [todo],
-          });
-        }
-        setTodo('');
-      };
       addTodo();
     }
   };
 
   useEffect(() => {
     fetchTodos();
-    console.log(todoArray);
-  }, []);
+  }, [todoArray]);
 
   return (
     <div className='flex flex-col place-items-center'>
+      {state.alert.open && (
+        <div className=' font-extrabold text-xl text-red-700'>
+          'Please add a Todo'
+        </div>
+      )}
       <h1 className=' text-center text-xl mt-5 uppercase font-semibold'>
         Manage your tasks easily !
       </h1>
@@ -66,10 +34,12 @@ const TodoList = () => {
           <div className='flex gap-2'>
             <input
               type='text'
-              name='todo'
-              id='todo'
-              value={todo}
-              onChange={(e) => setTodo(e.target.value)}
+              name='state.todo'
+              id='state.todo'
+              value={state.todo}
+              onChange={(e) =>
+                dispatch({ type: 'SET_TODO', payload: e.target.value })
+              }
               className=' border'
             />
             <button type='submit'>Add Todo</button>
