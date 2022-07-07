@@ -1,124 +1,150 @@
-import { useEffect, useState } from 'react';
-import {
-  createUserWithEmailAndPassword,
-  updateCurrentUser,
-} from 'firebase/auth';
-import { db, auth, googleProvider } from '../utils/firebase-config';
+import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { addDoc, setDoc, collection, doc } from 'firebase/firestore';
+import { UserContext } from '../contexts/UserContext';
+import { Link } from 'react-router-dom';
 
 const Register = () => {
+  const { dispatch, createUser, ...state } = useContext(UserContext);
   const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const [email, setEmail] = useState('');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-
   const handleRegister = (e) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
-      return;
+    if (state.password !== state.confirmPassword) {
+      dispatch({ type: 'PASSWORD_DONT_MATCH' });
     } else {
-      createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          const createUser = async () => {
-            await setDoc(doc(db, 'users', auth.currentUser.uid), {
-              username,
-              email,
-            });
-          };
-          createUser();
-          navigate('/');
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      createUser();
+      navigate('/');
     }
   };
 
   return (
-    <div className='flex justify-center'>
-      <form
-        onSubmit={(e) => handleRegister(e)}
-        className='w-1/2 h-auto border border-black rounded-lg mt-10 p-10 flex flex-col gap-5 shadow-lg bg-gray-100'>
-        <div className='flex gap-3'>
-          <label htmlFor='username'>Username</label>
-          <input
-            required
-            type='text'
-            id='email'
-            name='username'
-            className='border'
-            onChange={(event) => setUsername(event.target.value)}
-          />
+    <div className='flex justify-center pt-5 '>
+      <div className='flex flex-col w-1/3 px-4 pt-8 bg-white rounded-lg shadow dark:bg-gray-800 sm:px-6 md:px-8 lg:px-10'>
+        <div className='self-center text-xl font-light text-gray-800 sm:text-2xl dark:text-white'>
+          Create a new account
         </div>
-        <div className='flex gap-3'>
-          <label htmlFor='email'>Email</label>
-          <input
-            required
-            type='email'
-            id='email'
-            name='email'
-            className='border'
-            onChange={(event) => setEmail(event.target.value)}
-          />
+        <span className='justify-center text-sm text-center text-gray-500 flex-items-center dark:text-gray-400'>
+          Already have an account ?
+          <Link
+            to='/login'
+            className='text-sm text-blue-500 underline hover:text-blue-700 pl-2'>
+            Sign in
+          </Link>
+        </span>
+        <div className='p-6 mt-8'>
+          <form onSubmit={(e) => handleRegister(e)}>
+            <div className='flex flex-col mb-2'>
+              <div className=' relative '>
+                <input
+                  type='text'
+                  id='create-account-pseudo'
+                  className=' rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent'
+                  name='username'
+                  placeholder='Username'
+                  value={state.username}
+                  onChange={(event) =>
+                    dispatch({
+                      type: 'SET_USER_DATA',
+                      payload: { key: 'username', value: event.target.value },
+                    })
+                  }
+                />
+              </div>
+            </div>
+            <div className='flex flex-col mb-2'>
+              <div className=' relative '>
+                <input
+                  type='text'
+                  id='create-account-pseudo'
+                  className=' rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent'
+                  name='email'
+                  placeholder='Email'
+                  value={state.email}
+                  onChange={(event) =>
+                    dispatch({
+                      type: 'SET_USER_DATA',
+                      payload: { key: 'email', value: event.target.value },
+                    })
+                  }
+                />
+              </div>
+            </div>
+            <div className='flex flex-col mb-2'>
+              <div className=' relative rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent'>
+                <input
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  id='create-account-pseudo'
+                  className=' '
+                  name='password'
+                  placeholder='Password'
+                  value={state.password}
+                  onChange={(event) =>
+                    dispatch({
+                      type: 'SET_USER_DATA',
+                      payload: { key: 'password', value: event.target.value },
+                    })
+                  }
+                />
+                <button
+                  type='button'
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+                  {showConfirmPassword ? 'Hide' : 'Show'}
+                </button>
+              </div>
+            </div>
+            <div className='flex flex-col mb-2'>
+              <div className=' relative rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent'>
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  id='create-account-pseudo'
+                  className=''
+                  name='confirmPassword'
+                  placeholder='Confirm Password'
+                  value={state.confirmPassword}
+                  onChange={(event) =>
+                    dispatch({
+                      type: 'SET_USER_DATA',
+                      payload: {
+                        key: 'confirmPassword',
+                        value: event.target.value,
+                      },
+                    })
+                  }
+                />
+                <button
+                  type='button'
+                  onClick={() => setShowPassword(!showPassword)}>
+                  {showPassword ? 'Hide' : 'Show'}
+                </button>
+              </div>
+            </div>
+            <div className='flex flex-col gap-4 w-full my-4'>
+              <button
+                type='submit'
+                className='py-2 px-4  bg-purple-600 hover:bg-purple-700 focus:ring-purple-500 focus:ring-offset-purple-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg '>
+                Sign Up
+              </button>
+              <button
+                type='button'
+                className='py-2 px-4 flex justify-center items-center  bg-red-600 hover:bg-red-700 focus:ring-red-500 focus:ring-offset-red-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg '>
+                <svg
+                  width='20'
+                  height='20'
+                  fill='currentColor'
+                  className='mr-2'
+                  viewBox='0 0 1792 1792'
+                  xmlns='http://www.w3.org/2000/svg'>
+                  <path d='M896 786h725q12 67 12 128 0 217-91 387.5t-259.5 266.5-386.5 96q-157 0-299-60.5t-245-163.5-163.5-245-60.5-299 60.5-299 163.5-245 245-163.5 299-60.5q300 0 515 201l-209 201q-123-119-306-119-129 0-238.5 65t-173.5 176.5-64 243.5 64 243.5 173.5 176.5 238.5 65q87 0 160-24t120-60 82-82 51.5-87 22.5-78h-436v-264z'></path>
+                </svg>
+                Sign up with Google
+              </button>
+            </div>
+          </form>
         </div>
-        <div className='flex gap-3 place-items-center'>
-          <label htmlFor='password'>Password</label>
-          <input
-            required
-            type={showPassword ? 'text' : 'password'}
-            name='password'
-            id='password'
-            className='border'
-            onChange={(event) => setPassword(event.target.value)}
-          />
-          <button
-            type='button'
-            className=''
-            onClick={() => setShowPassword(!showPassword)}>
-            {showPassword ? 'Hide' : 'Show'}
-          </button>
-        </div>
-        <div className='flex gap-3 place-items-center'>
-          <label htmlFor='password'>Confirm Password</label>
-          <input
-            required
-            type={showConfirmPassword ? 'text' : 'password'}
-            name='password'
-            id='password'
-            className='border'
-            onChange={(event) => setConfirmPassword(event.target.value)}
-          />
-          <button
-            type='button'
-            className=''
-            onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
-            {showConfirmPassword ? 'Hide' : 'Show'}
-          </button>
-        </div>
-        <div className='flex flex-col gap-5'>
-          <button className='border'>Submit</button>
-          <button
-            type='button'
-            class='py-2 px-4 flex justify-center items-center  bg-red-600 hover:bg-red-700 focus:ring-red-500 focus:ring-offset-red-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg '>
-            <svg
-              width='20'
-              height='20'
-              fill='currentColor'
-              class='mr-2'
-              viewBox='0 0 1792 1792'
-              xmlns='http://www.w3.org/2000/svg'>
-              <path d='M896 786h725q12 67 12 128 0 217-91 387.5t-259.5 266.5-386.5 96q-157 0-299-60.5t-245-163.5-163.5-245-60.5-299 60.5-299 163.5-245 245-163.5 299-60.5q300 0 515 201l-209 201q-123-119-306-119-129 0-238.5 65t-173.5 176.5-64 243.5 64 243.5 173.5 176.5 238.5 65q87 0 160-24t120-60 82-82 51.5-87 22.5-78h-436v-264z'></path>
-            </svg>
-            Sign up with Google
-          </button>
-        </div>
-      </form>
+      </div>
     </div>
   );
 };

@@ -3,11 +3,20 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { AuthProvider } from './contexts/AuthContext';
+import { TodolistProvider } from './contexts/TodolistContext';
+import { UserProvider } from './contexts/UserContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <AuthProvider>
+      <UserProvider>
+        <TodolistProvider>
+          <App />
+        </TodolistProvider>
+      </UserProvider>
+    </AuthProvider>
   </React.StrictMode>
 );
 

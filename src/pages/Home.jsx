@@ -1,14 +1,9 @@
-import React, { useContext } from 'react';
-import { AuthContext } from '../contexts/AuthContext';
 import { Link } from 'react-router-dom';
-
 import Background from '../assets/home-bg.svg';
 
 const Home = () => {
-  const { currentUser } = useContext(AuthContext);
-
   return (
-    <div class='bg-indigo-900 relative overflow-hidden h-full'>
+    <div className='bg-indigo-900 relative overflow-hidden h-full'>
       <img
         src={Background}
         alt='bg-home'

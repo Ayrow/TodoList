@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import { TodolistContext } from '../contexts/TodolistContext';
 
 const TodoList = () => {
@@ -11,6 +11,7 @@ const TodoList = () => {
       dispatch({ type: 'MISSING_TODO' });
     } else {
       addTodo();
+      dispatch({ type: 'ADDING_TODO' });
     }
   };
 
