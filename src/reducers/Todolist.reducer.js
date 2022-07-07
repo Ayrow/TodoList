@@ -11,6 +11,8 @@ export const TodolistReducer = (state, action) => {
         alert: {
           ...alert,
           open: true,
+          message: 'please add a todo',
+          type: 'bg-red-500 text-white',
         },
       };
     case 'SET_TODO':

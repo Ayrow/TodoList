@@ -5,6 +5,14 @@ export const UserReducer = (state, action) => {
         ...state,
         [action.payload.key]: action.payload.value,
       };
+    case 'EMPTY_FORMS':
+      return {
+        ...state,
+        username: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+      };
     default:
       return state;
   }

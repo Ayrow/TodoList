@@ -4,8 +4,8 @@ import { UserContext } from '../contexts/UserContext';
 import { Link } from 'react-router-dom';
 
 const Register = () => {
-  const { dispatch, createUser, ...state } = useContext(UserContext);
   const navigate = useNavigate();
+  const { dispatch, createUser, ...state } = useContext(UserContext);
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -16,7 +16,7 @@ const Register = () => {
       dispatch({ type: 'PASSWORD_DONT_MATCH' });
     } else {
       createUser();
-      navigate('/');
+      navigate('/todolist');
     }
   };
 
@@ -39,12 +39,12 @@ const Register = () => {
             <div className='flex flex-col mb-2'>
               <div className=' relative '>
                 <input
+                  required
                   type='text'
-                  id='create-account-pseudo'
+                  id='username'
                   className=' rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent'
                   name='username'
                   placeholder='Username'
-                  value={state.username}
                   onChange={(event) =>
                     dispatch({
                       type: 'SET_USER_DATA',
@@ -57,12 +57,12 @@ const Register = () => {
             <div className='flex flex-col mb-2'>
               <div className=' relative '>
                 <input
+                  required
                   type='text'
-                  id='create-account-pseudo'
+                  id='email'
                   className=' rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent'
                   name='email'
                   placeholder='Email'
-                  value={state.email}
                   onChange={(event) =>
                     dispatch({
                       type: 'SET_USER_DATA',
@@ -73,14 +73,14 @@ const Register = () => {
               </div>
             </div>
             <div className='flex flex-col mb-2'>
-              <div className=' relative rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent'>
+              <div className='flex relative '>
                 <input
-                  type={showConfirmPassword ? 'text' : 'password'}
+                  required
+                  type={showPassword ? 'text' : 'password'}
                   id='create-account-pseudo'
-                  className=' '
+                  className='relative rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent '
                   name='password'
                   placeholder='Password'
-                  value={state.password}
                   onChange={(event) =>
                     dispatch({
                       type: 'SET_USER_DATA',
@@ -88,22 +88,25 @@ const Register = () => {
                     })
                   }
                 />
-                <button
-                  type='button'
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
-                  {showConfirmPassword ? 'Hide' : 'Show'}
-                </button>
+                <div className='absolute inset-y-0 right-0 flex items-center'>
+                  <button
+                    type='button'
+                    onClick={() => setShowPassword(!showPassword)}
+                    className='bg-white pr-4'>
+                    {showPassword ? 'Hide' : 'Show'}
+                  </button>
+                </div>
               </div>
             </div>
             <div className='flex flex-col mb-2'>
-              <div className=' relative rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent'>
+              <div className='flex relative'>
                 <input
-                  type={showPassword ? 'text' : 'password'}
+                  required
+                  type={showConfirmPassword ? 'text' : 'password'}
                   id='create-account-pseudo'
-                  className=''
+                  className='relative rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent'
                   name='confirmPassword'
                   placeholder='Confirm Password'
-                  value={state.confirmPassword}
                   onChange={(event) =>
                     dispatch({
                       type: 'SET_USER_DATA',
@@ -114,11 +117,16 @@ const Register = () => {
                     })
                   }
                 />
-                <button
-                  type='button'
-                  onClick={() => setShowPassword(!showPassword)}>
-                  {showPassword ? 'Hide' : 'Show'}
-                </button>
+                <div className='absolute inset-y-0 right-0 flex items-center'>
+                  <button
+                    className='bg-white pr-4'
+                    type='button'
+                    onClick={() =>
+                      setShowConfirmPassword(!showConfirmPassword)
+                    }>
+                    {showConfirmPassword ? 'Hide' : 'Show'}
+                  </button>
+                </div>
               </div>
             </div>
             <div className='flex flex-col gap-4 w-full my-4'>

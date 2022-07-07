@@ -27,9 +27,12 @@ export const UserProvider = ({ children }) => {
           });
         };
         addUserToDb();
+        dispatch({ type: 'EMPTY_FORMS' });
       })
       .catch((error) => {
-        console.log(error);
+        if (error.code === 'auth/email-already-in-use') {
+          alert('email already in use');
+        }
       });
   };
 

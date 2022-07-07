@@ -4,6 +4,7 @@ import { TodolistReducer } from '../reducers/Todolist.reducer';
 import { auth, db } from '../utils/firebase-config';
 
 const initialState = {
+  loading: false,
   todo: '',
   todoArray: [],
   openModal: false,
@@ -44,9 +45,13 @@ export const TodolistProvider = ({ children }) => {
     }
   };
 
+  const closeAlert = () => {
+    state.alert.open = false;
+  };
+
   return (
     <TodolistContext.Provider
-      value={{ ...state, dispatch, fetchTodos, addTodo }}>
+      value={{ ...state, dispatch, fetchTodos, addTodo, closeAlert }}>
       {children}
     </TodolistContext.Provider>
   );
