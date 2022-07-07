@@ -21,9 +21,9 @@ const App = () => {
           <Routes>
             <Route element={<PrivateRoute />}>
               <Route exact path='/my-account' element={<MyAccount />} />
-              <Route exact path='/todolist' element={<TodoList />} />
             </Route>
             <Route exact path='/' element={<Home />} />
+            <Route exact path='/todolist' element={<TodoList />} />
             <Route exact path='/login' element={<Login />} />
             <Route exact path='/register' element={<Register />} />
             <Route path='/*' element={<PageNotFound />} />
