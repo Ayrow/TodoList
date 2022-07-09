@@ -1,8 +1,13 @@
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import {
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+} from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
-import { createContext, useReducer } from 'react';
+import { createContext, useContext, useEffect, useReducer } from 'react';
 import { UserReducer } from '../reducers/User.reducer';
 import { auth, db } from '../utils/firebase-config';
+import { AuthContext } from './AuthContext';
 
 export const UserContext = createContext();
 
@@ -15,13 +20,14 @@ const initialState = {
 };
 
 export const UserProvider = ({ children }) => {
+  const { currentUser } = useContext(AuthContext);
   const [state, dispatch] = useReducer(UserReducer, initialState);
 
   const createUser = () => {
     createUserWithEmailAndPassword(auth, state.email, state.password)
       .then((userCredential) => {
         const addUserToDb = async () => {
-          await setDoc(doc(db, 'users', auth.currentUser.uid), {
+          await setDoc(doc(db, 'users', currentUser.uid), {
             username: state.username,
             email: state.email,
           });
@@ -36,8 +42,19 @@ export const UserProvider = ({ children }) => {
       });
   };
 
+  const loginUserWithEmailAndPassword = () => {
+    signInWithEmailAndPassword(auth, state.email, state.password)
+      .then((user) => {
+        console.log(user);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   return (
-    <UserContext.Provider value={{ ...state, dispatch, createUser }}>
+    <UserContext.Provider
+      value={{ ...state, dispatch, createUser, loginUserWithEmailAndPassword }}>
       {children}
     </UserContext.Provider>
   );

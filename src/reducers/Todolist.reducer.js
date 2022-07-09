@@ -16,10 +16,38 @@ export const TodolistReducer = (state, action) => {
         },
       };
     case 'SET_TODO':
-      console.log(action.payload);
       return {
         ...state,
         todo: action.payload,
+      };
+    case 'ADDING_TODO':
+      return {
+        ...state,
+        todo: '',
+      };
+    case 'DELETE_TODO':
+      return {
+        ...state,
+        todo: '',
+      };
+    case 'EDIT_TODO':
+      return {
+        ...state,
+        editID: action.payload.index,
+        todo: action.payload.item,
+        isEditing: true,
+      };
+    case 'UPDATE_ARRAY':
+      return {
+        ...state,
+        todoArray: action.payload,
+      };
+    case 'UPDATE_EDIT_TODO':
+      return {
+        ...state,
+        isEditing: false,
+        todo: '',
+        editID: null,
       };
     default:
       return state;

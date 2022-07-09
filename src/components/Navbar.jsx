@@ -7,7 +7,7 @@ const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   return (
-    <div className=' bg-gray-800 text-white text-xl p-5 '>
+    <div className=' bg-gray-800 text-white text-xl p-5'>
       <div className='flex justify-between'>
         <Link to='/'>Home</Link>
         <Link to='/todolist'>TodoList</Link>

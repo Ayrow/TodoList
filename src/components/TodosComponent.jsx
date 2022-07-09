@@ -1,18 +1,37 @@
 import React, { useContext, useEffect } from 'react';
 import { TodolistContext } from '../contexts/TodolistContext';
 import AlertTodo from './AlertTodo';
+import ModalTodolist from './ModalTodolist';
 
 const TodosComponent = () => {
-  const { dispatch, fetchTodos, addTodo, todoArray, ...state } =
-    useContext(TodolistContext);
+  const {
+    dispatch,
+    fetchTodos,
+    addTodo,
+    deleteTodo,
+    updateTodo,
+    editTodo,
+    todoArray,
+    ...state
+  } = useContext(TodolistContext);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!state.todo) {
       dispatch({ type: 'MISSING_TODO' });
+    } else if (state.todo && state.isEditing) {
+      const tempList = todoArray.map((item, index) => {
+        if (index === state.editID) {
+          deleteTodo(item);
+          return state.todo;
+        }
+        return item;
+      });
+      dispatch({ type: 'UPDATE_ARRAY', payload: tempList });
+      updateTodo();
+      // Really troublesome to update a field in an array in firebase
     } else {
       addTodo();
-      dispatch({ type: 'ADDING_TODO' });
     }
   };
 
@@ -21,7 +40,12 @@ const TodosComponent = () => {
   }, [todoArray]);
 
   return (
-    <div className='flex flex-col place-items-center'>
+    <div className='flex flex-col place-items-center relative h-screen'>
+      {!state.isModalOpen && (
+        <div className='absolute z-40 bg-black bg-opacity-80 w-full h-full flex '>
+          <ModalTodolist />
+        </div>
+      )}
       <h1 className=' text-center text-xl mt-5 uppercase font-semibold'>
         Manage your tasks easily !
       </h1>
@@ -33,8 +57,9 @@ const TodosComponent = () => {
             <div className='flex'>
               <input
                 type='text'
-                name='state.todo'
-                id='state.todo'
+                name='todo'
+                id='todo'
+                value={state.todo}
                 onChange={(e) =>
                   dispatch({ type: 'SET_TODO', payload: e.target.value })
                 }
@@ -43,22 +68,41 @@ const TodosComponent = () => {
               <button
                 type='submit'
                 className='border text-black bg-slate-100 px-2 rounded-r-md '>
-                Add Todo
+                {state.isEditing ? 'Edit Todo' : 'Add Todo'}
               </button>
             </div>
-          </form>
+            {todoArray.length > 0 && (
+              <div className='flex flex-col place-items-center'>
+                {todoArray.map((item, index) => {
+                  return (
+                    <div key={index} className=' w-full mt-4  '>
+                      <div className=' capitalize grid grid-cols-3 py-2 px-4 bg-slate-200 text-black w-full text-center text-lg font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg '>
+                        {item}
+                        <button
+                          type='button'
+                          onClick={() => editTodo(item, index)}
+                          className=' text-green-800'>
+                          Edit
+                        </button>
+                        <button
+                          type='button'
+                          onClick={() => deleteTodo(item)}
+                          className=' text-red-600'>
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
 
-          {todoArray.map((item, index) => {
-            return (
-              <div key={index} className=' w-full mt-4  '>
-                <div className='grid grid-cols-3 py-2 px-4 bg-slate-200 text-black w-full text-center text-lg font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg '>
-                  {item}
-                  <button className=' text-green-800'>Edit</button>
-                  <button className=' text-red-600'>Delete</button>
-                </div>
+                <button
+                  type='button'
+                  className='mt-5 w-1/3 py-2 px-4 flex justify-center items-center  bg-red-600 hover:bg-red-700 focus:ring-red-500 focus:ring-offset-red-200 text-white transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg '>
+                  Clear All
+                </button>
               </div>
-            );
-          })}
+            )}
+          </form>
         </div>
       </div>
     </div>

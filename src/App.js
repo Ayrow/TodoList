@@ -7,6 +7,7 @@ import MyAccount from './pages/MyAccount';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Routes, Route } from 'react-router-dom';
 
+import RouteNewUserOnly from './components/RouteNewUserOnly';
 import PrivateRoute from './components/PrivateRoute';
 import TodoList from './pages/TodoList';
 
@@ -22,8 +23,11 @@ const App = () => {
         </Route>
         <Route exact path='/' element={<Home />} />
         <Route exact path='/todolist' element={<TodoList />} />
-        <Route exact path='/login' element={<Login />} />
-        <Route exact path='/register' element={<Register />} />
+
+        <Route element={<RouteNewUserOnly />}>
+          <Route exact path='/login' element={<Login />} />
+          <Route exact path='/register' element={<Register />} />
+        </Route>
         <Route path='/*' element={<PageNotFound />} />
       </Routes>
     </Router>

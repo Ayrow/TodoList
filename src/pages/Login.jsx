@@ -1,24 +1,18 @@
 import { useContext, useState } from 'react';
-import { signInWithEmailAndPassword } from 'firebase/auth';
 import { Link, useNavigate } from 'react-router-dom';
-import { auth } from '../utils/firebase-config';
 import { UserContext } from '../contexts/UserContext';
 
 const Login = () => {
-  const { dispatch, ...state } = useContext(UserContext);
+  const { dispatch, loginUserWithEmailAndPassword, ...state } =
+    useContext(UserContext);
   const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
 
   const handleSignin = (e) => {
     e.preventDefault();
-    signInWithEmailAndPassword(auth, state.email, state.password)
-      .then((userCredential) => {
-        navigate('/todolist');
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    loginUserWithEmailAndPassword();
+    navigate('/todolist');
     // dispatch({ type: 'EMPTY_FORMS' });
   };
 
