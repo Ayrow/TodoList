@@ -19,18 +19,20 @@ const TodosComponent = () => {
     e.preventDefault();
     if (!state.todo) {
       dispatch({ type: 'MISSING_TODO' });
-    } else if (state.todo && state.isEditing) {
-      const tempList = todoArray.map((item, index) => {
-        if (index === state.editID) {
-          deleteTodo(item);
-          return state.todo;
-        }
-        return item;
-      });
-      dispatch({ type: 'UPDATE_ARRAY', payload: tempList });
-      updateTodo();
-      // Really troublesome to update a field in an array in firebase
-    } else {
+    }
+    // else if (state.todo && state.isEditing) {
+    //   const tempList = todoArray.map((item, index) => {
+    //     if (index === state.editID) {
+    //       deleteTodo(item);
+    //       return state.todo;
+    //     }
+    //     return item;
+    //   });
+    //   dispatch({ type: 'UPDATE_ARRAY', payload: tempList });
+    //   updateTodo();
+    //   // Really troublesome to update a field in an array in firebase
+    // }
+    else {
       addTodo();
     }
   };
@@ -41,9 +43,9 @@ const TodosComponent = () => {
 
   return (
     <div className='flex flex-col place-items-center relative h-screen'>
-      {!state.isModalOpen && (
+      {state.isModalOpen && (
         <div className='absolute z-40 bg-black bg-opacity-80 w-full h-full flex '>
-          <ModalTodolist />
+          <ModalTodolist todoArray={todoArray} />
         </div>
       )}
       <h1 className=' text-center text-xl mt-5 uppercase font-semibold'>
@@ -68,7 +70,7 @@ const TodosComponent = () => {
               <button
                 type='submit'
                 className='border text-black bg-slate-100 px-2 rounded-r-md '>
-                {state.isEditing ? 'Edit Todo' : 'Add Todo'}
+                Add Todo
               </button>
             </div>
             {todoArray.length > 0 && (
@@ -86,7 +88,12 @@ const TodosComponent = () => {
                         </button>
                         <button
                           type='button'
-                          onClick={() => deleteTodo(item)}
+                          onClick={() =>
+                            dispatch({
+                              type: 'CONFIRM_DELETE',
+                              payload: item,
+                            })
+                          }
                           className=' text-red-600'>
                           Delete
                         </button>

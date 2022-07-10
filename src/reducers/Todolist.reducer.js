@@ -25,16 +25,25 @@ export const TodolistReducer = (state, action) => {
         ...state,
         todo: '',
       };
+    case 'CONFIRM_DELETE':
+      return {
+        ...state,
+        isModalOpen: true,
+        todoToUpdate: action.payload,
+      };
     case 'DELETE_TODO':
       return {
         ...state,
         todo: '',
+        todoToUpdate: '',
+        isModalOpen: false,
       };
     case 'EDIT_TODO':
       return {
         ...state,
         editID: action.payload.index,
-        todo: action.payload.item,
+        todoToUpdate: action.payload.item,
+        isModalOpen: true,
         isEditing: true,
       };
     case 'UPDATE_ARRAY':
@@ -46,7 +55,9 @@ export const TodolistReducer = (state, action) => {
       return {
         ...state,
         isEditing: false,
+        isModalOpen: false,
         todo: '',
+        todoToUpdate: '',
         editID: null,
       };
     default:

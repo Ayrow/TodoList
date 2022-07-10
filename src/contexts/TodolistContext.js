@@ -14,10 +14,11 @@ import { AuthContext } from './AuthContext';
 const initialState = {
   loading: false,
   todo: '',
+  todoToUpdate: '',
   editID: null,
   isEditing: false,
   todoArray: [],
-  IsModalOpen: false,
+  isModalOpen: false,
   alert: {
     open: false,
     type: '',
@@ -57,10 +58,10 @@ export const TodolistProvider = ({ children }) => {
     }
   };
 
-  const deleteTodo = async (item) => {
+  const deleteTodo = async (todoToUpdate) => {
     const todoRef = doc(db, 'todos', currentUser.uid);
     await updateDoc(todoRef, {
-      todos: arrayRemove(item),
+      todos: arrayRemove(todoToUpdate),
     });
     dispatch({ type: 'DELETE_TODO' });
   };
@@ -72,9 +73,14 @@ export const TodolistProvider = ({ children }) => {
   const updateTodo = async () => {
     const todoRef = doc(db, 'todos', currentUser.uid);
     await updateDoc(todoRef, {
-      todos: arrayUnion(state.todo),
+      todos: arrayUnion(state.todoToUpdate),
     });
     dispatch({ type: 'UPDATE_EDIT_TODO' });
+  };
+
+  const closeModal = () => {
+    state.isModalOpen = false;
+    state.isEditing = false;
   };
 
   const closeAlert = () => {
@@ -91,6 +97,7 @@ export const TodolistProvider = ({ children }) => {
         deleteTodo,
         updateTodo,
         editTodo,
+        closeModal,
         closeAlert,
       }}>
       {children}
