@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { TodolistContext } from '../contexts/TodolistContext';
+import { TodolistContext } from '../../contexts/TodolistContext';
 
 const ModalDeleteTodo = () => {
   const { closeModal, deleteTodo, ...state } = useContext(TodolistContext);

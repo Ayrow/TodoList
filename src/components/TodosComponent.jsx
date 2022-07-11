@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import { TodolistContext } from '../contexts/TodolistContext';
 import AlertTodo from './AlertTodo';
-import ModalTodolist from './ModalTodolist';
+import ModalTodolist from './Modal/ModalTodolist';
 
 const TodosComponent = () => {
   const {
@@ -11,6 +11,7 @@ const TodosComponent = () => {
     deleteTodo,
     updateTodo,
     editTodo,
+    clearList,
     todoArray,
     ...state
   } = useContext(TodolistContext);
@@ -19,20 +20,7 @@ const TodosComponent = () => {
     e.preventDefault();
     if (!state.todo) {
       dispatch({ type: 'MISSING_TODO' });
-    }
-    // else if (state.todo && state.isEditing) {
-    //   const tempList = todoArray.map((item, index) => {
-    //     if (index === state.editID) {
-    //       deleteTodo(item);
-    //       return state.todo;
-    //     }
-    //     return item;
-    //   });
-    //   dispatch({ type: 'UPDATE_ARRAY', payload: tempList });
-    //   updateTodo();
-    //   // Really troublesome to update a field in an array in firebase
-    // }
-    else {
+    } else {
       addTodo();
     }
   };
@@ -45,7 +33,7 @@ const TodosComponent = () => {
     <div className='flex flex-col place-items-center relative h-screen'>
       {state.isModalOpen && (
         <div className='absolute z-40 bg-black bg-opacity-80 w-full h-full flex '>
-          <ModalTodolist todoArray={todoArray} />
+          <ModalTodolist />
         </div>
       )}
       <h1 className=' text-center text-xl mt-5 uppercase font-semibold'>
@@ -104,6 +92,7 @@ const TodosComponent = () => {
 
                 <button
                   type='button'
+                  onClick={() => clearList()}
                   className='mt-5 w-1/3 py-2 px-4 flex justify-center items-center  bg-red-600 hover:bg-red-700 focus:ring-red-500 focus:ring-offset-red-200 text-white transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg '>
                   Clear All
                 </button>

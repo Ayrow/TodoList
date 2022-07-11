@@ -11,8 +11,11 @@ const TodoList = () => {
       {currentUser ? (
         <TodosComponent />
       ) : (
-        <div>
-          You need an account to start a todolist
+        <div className=''>
+          <div className=' font-semibold text-xl text-center mt-5'>
+            You need an account to start a todolist
+          </div>
+
           <Register />
         </div>
       )}

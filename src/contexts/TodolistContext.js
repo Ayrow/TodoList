@@ -1,6 +1,7 @@
 import {
   arrayRemove,
   arrayUnion,
+  deleteDoc,
   doc,
   getDoc,
   setDoc,
@@ -18,6 +19,7 @@ const initialState = {
   editID: null,
   isEditing: false,
   todoArray: [],
+  tempArray: [],
   isModalOpen: false,
   alert: {
     open: false,
@@ -73,9 +75,13 @@ export const TodolistProvider = ({ children }) => {
   const updateTodo = async () => {
     const todoRef = doc(db, 'todos', currentUser.uid);
     await updateDoc(todoRef, {
-      todos: arrayUnion(state.todoToUpdate),
+      todos: state.tempArray,
     });
     dispatch({ type: 'UPDATE_EDIT_TODO' });
+  };
+
+  const clearList = async () => {
+    await deleteDoc(doc(db, 'todos', currentUser.uid));
   };
 
   const closeModal = () => {
@@ -97,6 +103,7 @@ export const TodolistProvider = ({ children }) => {
         deleteTodo,
         updateTodo,
         editTodo,
+        clearList,
         closeModal,
         closeAlert,
       }}>

@@ -49,6 +49,7 @@ export const TodolistReducer = (state, action) => {
     case 'UPDATE_ARRAY':
       return {
         ...state,
+        tempArray: action.payload,
         todoArray: action.payload,
       };
     case 'UPDATE_EDIT_TODO':

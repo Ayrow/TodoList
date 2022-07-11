@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 import { useState } from 'react';
-import { TodolistContext } from '../contexts/TodolistContext';
+import { TodolistContext } from '../../contexts/TodolistContext';
 
-const ModalEditTodo = (todoArray) => {
+const ModalEditTodo = () => {
   const { dispatch, closeModal, deleteTodo, updateTodo, ...state } =
     useContext(TodolistContext);
   const [todoUpdated, setTodoUpdated] = useState('');
@@ -10,7 +10,6 @@ const ModalEditTodo = (todoArray) => {
   const editTodo = () => {
     const tempList = state.todoArray.map((item, index) => {
       if (index === state.editID) {
-        deleteTodo(item);
         return todoUpdated;
       }
       return item;
