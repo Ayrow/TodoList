@@ -5,7 +5,8 @@ import { Link } from 'react-router-dom';
 
 const Register = () => {
   const navigate = useNavigate();
-  const { dispatch, createUser, ...state } = useContext(UserContext);
+  const { dispatch, createUser, loginWithGoogle, ...state } =
+    useContext(UserContext);
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -137,6 +138,7 @@ const Register = () => {
               </button>
               <button
                 type='button'
+                onClick={loginWithGoogle}
                 className='py-2 px-4 flex justify-center items-center  bg-red-600 hover:bg-red-700 focus:ring-red-500 focus:ring-offset-red-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg '>
                 <svg
                   width='20'
