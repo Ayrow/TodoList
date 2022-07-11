@@ -24,6 +24,12 @@ export const TodolistReducer = (state, action) => {
       return {
         ...state,
         todo: '',
+        alert: {
+          ...alert,
+          open: true,
+          message: 'Succes! The todo has been added to the list',
+          type: 'bg-green-500 text-white',
+        },
       };
     case 'CONFIRM_DELETE':
       return {
@@ -37,6 +43,12 @@ export const TodolistReducer = (state, action) => {
         todo: '',
         todoToUpdate: '',
         isModalOpen: false,
+        alert: {
+          ...alert,
+          open: true,
+          message: 'Success! The Todo has been deleted',
+          type: 'bg-green-500 text-white',
+        },
       };
     case 'EDIT_TODO':
       return {
@@ -60,6 +72,29 @@ export const TodolistReducer = (state, action) => {
         todo: '',
         todoToUpdate: '',
         editID: null,
+        alert: {
+          ...alert,
+          open: true,
+          message: 'Success! The todo has been changed',
+          type: 'bg-green-500 text-white',
+        },
+      };
+    case 'CLEARED_LIST':
+      return {
+        ...state,
+        isEditing: false,
+        isModalOpen: false,
+        todo: '',
+        todoToUpdate: '',
+        editID: null,
+        tempArray: [],
+        todoArray: [],
+        alert: {
+          ...alert,
+          open: true,
+          message: 'Success! The List has been cleared',
+          type: 'bg-red-500 text-white',
+        },
       };
     default:
       return state;

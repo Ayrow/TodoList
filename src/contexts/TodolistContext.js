@@ -82,6 +82,7 @@ export const TodolistProvider = ({ children }) => {
 
   const clearList = async () => {
     await deleteDoc(doc(db, 'todos', currentUser.uid));
+    dispatch({ type: 'CLEARED_LIST' });
   };
 
   const closeModal = () => {
