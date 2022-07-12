@@ -3,6 +3,7 @@ import {
   GoogleAuthProvider,
   signInWithEmailAndPassword,
   signInWithPopup,
+  updatePassword,
 } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { createContext, useContext, useReducer } from 'react';
@@ -18,6 +19,7 @@ const initialState = {
   email: '',
   password: '',
   confirmPassword: '',
+  newPassword: '',
 };
 
 export const UserProvider = ({ children }) => {
@@ -50,6 +52,9 @@ export const UserProvider = ({ children }) => {
       })
       .catch((error) => {
         console.log(error);
+        if (error.code === 'auth/wrong-password') {
+          alert('Wrong credentials');
+        }
       });
   };
 
@@ -84,6 +89,19 @@ export const UserProvider = ({ children }) => {
       });
   };
 
+  const changePassword = () => {
+    updatePassword(currentUser, state.newPassword)
+      .then(() => {
+        dispatch({ type: 'UPDATED_PASSWORD' });
+        // Update successful.
+      })
+      .catch((error) => {
+        console.log(error);
+        // An error ocurred
+        // ...
+      });
+  };
+
   return (
     <UserContext.Provider
       value={{
@@ -92,6 +110,7 @@ export const UserProvider = ({ children }) => {
         createUser,
         loginUserWithEmailAndPassword,
         loginWithGoogle,
+        changePassword,
       }}>
       {children}
     </UserContext.Provider>

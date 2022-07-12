@@ -3,9 +3,12 @@ import { AuthContext } from '../contexts/AuthContext';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../utils/firebase-config';
 import EmptyProfile from '../assets/no-profile-picture.svg';
+import { UserContext } from '../contexts/UserContext';
 
 const MyAccount = () => {
   const { currentUser } = useContext(AuthContext);
+  const { changePassword, dispatch, ...state } = useContext(UserContext);
+  const [showPassword, setShowPassword] = useState(false);
   const [user, setUser] = useState({});
 
   const fetchUserInfo = async () => {
@@ -18,8 +21,6 @@ const MyAccount = () => {
       console.log('No such document!');
     }
   };
-
-  const deleteAccount = async () => {};
 
   useEffect(() => {
     fetchUserInfo();
@@ -52,7 +53,6 @@ const MyAccount = () => {
                   className=' rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent'
                   placeholder={user.email}
                   // value={user.email}
-                  onChange={(e) => e.target.value}
                 />
               </div>
             </div>
@@ -89,16 +89,33 @@ const MyAccount = () => {
             <div className='w-full max-w-sm pl-2 mx-auto space-y-5 md:w-5/12 md:pl-9 md:inline-flex'>
               <div className=' relative '>
                 <input
-                  type='text'
-                  id='user-info-password'
-                  className=' rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent'
-                  placeholder='New Password'
+                  required
+                  type={showPassword ? 'text' : 'password'}
+                  id='create-account-pseudo'
+                  className='relative rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent '
+                  name='password'
+                  placeholder='Password'
+                  onChange={(event) =>
+                    dispatch({
+                      type: 'SET_NEW_PASSWORD',
+                      payload: event.target.value,
+                    })
+                  }
                 />
+                <div className='absolute inset-y-0 right-0 flex items-center'>
+                  <button
+                    type='button'
+                    onClick={() => setShowPassword(!showPassword)}
+                    className='bg-white pr-4'>
+                    {showPassword ? 'Hide' : 'Show'}
+                  </button>
+                </div>
               </div>
             </div>
             <div className='text-center md:w-3/12 md:pl-6'>
               <button
                 type='button'
+                onClick={() => changePassword()}
                 className='py-2 px-4  bg-pink-600 hover:bg-pink-700 focus:ring-pink-500 focus:ring-offset-pink-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg '>
                 Change
               </button>
