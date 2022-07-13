@@ -101,10 +101,7 @@ export const UserProvider = ({ children }) => {
       password
     );
 
-    const result = await reauthenticateWithCredential(
-      auth.currentUser,
-      credential
-    );
+    await reauthenticateWithCredential(auth.currentUser, credential);
 
     // Pass result.user here
     await updatePassword(currentUser, state.newPassword)
@@ -117,6 +114,7 @@ export const UserProvider = ({ children }) => {
       .catch((error) => {
         // An error ocurred
         console.log(error);
+        alert(error.message);
         // ...
       });
 

@@ -17,6 +17,7 @@ export const UserReducer = (state, action) => {
       return {
         ...state,
         newPassword: '',
+        password: '',
       };
     case 'CANCEL_MODAL':
       return {
