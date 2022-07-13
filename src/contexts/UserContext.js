@@ -1,11 +1,15 @@
 import {
   createUserWithEmailAndPassword,
+  deleteUser,
+  EmailAuthProvider,
   GoogleAuthProvider,
+  reauthenticateWithCredential,
   signInWithEmailAndPassword,
   signInWithPopup,
   updatePassword,
 } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
+import { useState } from 'react';
 import { createContext, useContext, useReducer } from 'react';
 import { UserReducer } from '../reducers/User.reducer';
 import { auth, db, googleProvider } from '../utils/firebase-config';
@@ -23,8 +27,9 @@ const initialState = {
 };
 
 export const UserProvider = ({ children }) => {
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser, handleSignout } = useContext(AuthContext);
   const [state, dispatch] = useReducer(UserReducer, initialState);
+  const [isModalReAuthOpen, setIsModalReAuthOpen] = useState(false);
 
   const createUser = () => {
     createUserWithEmailAndPassword(auth, state.email, state.password)
@@ -54,6 +59,7 @@ export const UserProvider = ({ children }) => {
         console.log(error);
         if (error.code === 'auth/wrong-password') {
           alert('Wrong credentials');
+          handleSignout();
         }
       });
   };
@@ -89,17 +95,49 @@ export const UserProvider = ({ children }) => {
       });
   };
 
-  const changePassword = () => {
-    updatePassword(currentUser, state.newPassword)
+  const changePassword = async (password) => {
+    const credential = EmailAuthProvider.credential(
+      currentUser.email,
+      password
+    );
+
+    const result = await reauthenticateWithCredential(
+      auth.currentUser,
+      credential
+    );
+
+    // Pass result.user here
+    await updatePassword(currentUser, state.newPassword)
       .then(() => {
         dispatch({ type: 'UPDATED_PASSWORD' });
+        setIsModalReAuthOpen(false);
+        alert('password updated');
         // Update successful.
       })
       .catch((error) => {
-        console.log(error);
         // An error ocurred
+        console.log(error);
         // ...
       });
+
+    console.log('success in updating');
+  };
+
+  const deleteAccount = async (password) => {
+    const credential = EmailAuthProvider.credential(
+      currentUser.email,
+      password
+    );
+
+    const result = await reauthenticateWithCredential(
+      auth.currentUser,
+      credential
+    );
+
+    // Pass result.user here
+    await deleteUser(result.user);
+
+    console.log('success in deleting');
   };
 
   return (
@@ -110,7 +148,10 @@ export const UserProvider = ({ children }) => {
         createUser,
         loginUserWithEmailAndPassword,
         loginWithGoogle,
+        deleteAccount,
         changePassword,
+        isModalReAuthOpen,
+        setIsModalReAuthOpen,
       }}>
       {children}
     </UserContext.Provider>

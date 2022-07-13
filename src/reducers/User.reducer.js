@@ -13,15 +13,15 @@ export const UserReducer = (state, action) => {
         password: '',
         confirmPassword: '',
       };
-    case 'SET_NEW_PASSWORD':
-      return {
-        ...state,
-        newPassword: action.payload,
-      };
     case 'UPDATED_PASSWORD':
       return {
         ...state,
         newPassword: '',
+      };
+    case 'CANCEL_MODAL':
+      return {
+        ...state,
+        isLoginModalOpen: false,
       };
     default:
       return state;

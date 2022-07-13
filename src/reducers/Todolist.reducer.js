@@ -27,7 +27,7 @@ export const TodolistReducer = (state, action) => {
         alert: {
           ...alert,
           open: true,
-          message: 'Succes! The todo has been added to the list',
+          message: 'Success! The todo has been added to the list',
           type: 'bg-green-500 text-white',
         },
       };

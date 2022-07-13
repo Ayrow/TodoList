@@ -7,17 +7,7 @@ import { auth } from '../utils/firebase-config';
 
 const DropdownMenu = ({ setIsDropdownOpen }) => {
   const navigate = useNavigate();
-  const { currentUser } = useContext(AuthContext);
-
-  const handleSignout = () => {
-    signOut(auth)
-      .then(() => {
-        navigate('/login');
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+  const { currentUser, handleSignout } = useContext(AuthContext);
 
   return (
     <div
