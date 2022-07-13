@@ -1,9 +1,7 @@
 import { Fragment } from 'react';
-import { signOut } from 'firebase/auth';
 import { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
-import { auth } from '../utils/firebase-config';
 
 const DropdownMenu = ({ setIsDropdownOpen }) => {
   const navigate = useNavigate();

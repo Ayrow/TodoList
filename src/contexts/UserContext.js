@@ -24,6 +24,15 @@ const initialState = {
   password: '',
   confirmPassword: '',
   newPassword: '',
+  isDeleting: false,
+  isUpdatingPassword: false,
+  isUpdatingUserInfo: false,
+  alert: {
+    isOpen: false,
+    message: '',
+    type: '',
+    color: '',
+  },
 };
 
 export const UserProvider = ({ children }) => {
@@ -96,29 +105,34 @@ export const UserProvider = ({ children }) => {
   };
 
   const changePassword = async (password) => {
-    const credential = EmailAuthProvider.credential(
-      currentUser.email,
-      password
-    );
+    if (password === state.newPassword) {
+      setIsModalReAuthOpen(false);
+      dispatch({ type: 'PASSWORD_ALREADY_USED' });
+    } else {
+      const credential = EmailAuthProvider.credential(
+        currentUser.email,
+        password
+      );
 
-    await reauthenticateWithCredential(auth.currentUser, credential);
+      await reauthenticateWithCredential(auth.currentUser, credential);
 
-    // Pass result.user here
-    await updatePassword(currentUser, state.newPassword)
-      .then(() => {
-        dispatch({ type: 'UPDATED_PASSWORD' });
-        setIsModalReAuthOpen(false);
-        alert('password updated');
-        // Update successful.
-      })
-      .catch((error) => {
-        // An error ocurred
-        console.log(error);
-        alert(error.message);
-        // ...
-      });
+      // Pass result.user here
+      await updatePassword(currentUser, state.newPassword)
+        .then(() => {
+          dispatch({ type: 'UPDATED_PASSWORD' });
+          setIsModalReAuthOpen(false);
+          alert('password updated');
+          // Update successful.
+        })
+        .catch((error) => {
+          // An error ocurred
+          console.log(error);
+          alert(error.message);
+          // ...
+        });
 
-    console.log('success in updating');
+      console.log('success in updating');
+    }
   };
 
   const deleteAccount = async (password) => {
@@ -138,6 +152,10 @@ export const UserProvider = ({ children }) => {
     console.log('success in deleting');
   };
 
+  const closeAlert = () => {
+    dispatch({ type: 'CLOSE_ALERT' });
+  };
+
   return (
     <UserContext.Provider
       value={{
@@ -149,6 +167,7 @@ export const UserProvider = ({ children }) => {
         deleteAccount,
         changePassword,
         isModalReAuthOpen,
+        closeAlert,
         setIsModalReAuthOpen,
       }}>
       {children}

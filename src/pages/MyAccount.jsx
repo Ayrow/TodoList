@@ -5,6 +5,7 @@ import { db } from '../utils/firebase-config';
 import EmptyProfile from '../assets/no-profile-picture.svg';
 import { UserContext } from '../contexts/UserContext';
 import ModalLogin from '../components/Modal/ModalLogin';
+import AlertUser from '../components/AlertUser';
 
 const MyAccount = () => {
   const { currentUser } = useContext(AuthContext);
@@ -15,6 +16,7 @@ const MyAccount = () => {
     setIsModalReAuthOpen,
     ...state
   } = useContext(UserContext);
+
   const [showPassword, setShowPassword] = useState(false);
   const [user, setUser] = useState({});
 
@@ -31,8 +33,8 @@ const MyAccount = () => {
 
   const verifyAccountForPassword = () => {
     if (state.newPassword === '') {
-      // dispatch({ type: 'MISSING_NEW_PASSWORD' });
-      alert('please enter a new password');
+      dispatch({ type: 'MISSING_NEW_PASSWORD' });
+      // alert('enter password');
     } else {
       setIsModalReAuthOpen(true);
     }
@@ -49,6 +51,7 @@ const MyAccount = () => {
           <ModalLogin newPassword={state.newPassword} />
         </div>
       )}
+      {state.alert.isOpen && <AlertUser />}
       <form className='container max-w-2xl mx-auto shadow-md md:w-3/4 pt-5'>
         <div className='p-4 bg-gray-100 border-t-2 border-indigo-400 rounded-lg bg-opacity-5'>
           <div className='max-w-sm mx-auto md:w-full md:mx-0'>
