@@ -13,6 +13,16 @@ export const UserReducer = (state, action) => {
         password: '',
         confirmPassword: '',
       };
+    case 'PASSWORDS_DONT_MATCH':
+      return {
+        ...state,
+        alert: {
+          isOpen: true,
+          type: 'Error',
+          message: 'Passwords do not match',
+          color: 'bg-red-200 border-red-600 text-red-600',
+        },
+      };
     case 'UPDATED_PASSWORD':
       return {
         ...state,
@@ -52,6 +62,24 @@ export const UserReducer = (state, action) => {
           ...alert,
           isOpen: false,
         },
+      };
+    case 'MODAL_UPDATE_PASSWORD':
+      return {
+        ...state,
+        isUpdatingPassword: true,
+        isDeleting: false,
+      };
+    case 'MODAL_DELETE':
+      return {
+        ...state,
+        isDeleting: true,
+        isUpdatingPassword: false,
+      };
+    case 'CLOSE_MODAL':
+      return {
+        ...state,
+        isUpdatingPassword: false,
+        isDeleting: false,
       };
     default:
       return state;

@@ -3,8 +3,13 @@ import { useState } from 'react';
 import { UserContext } from '../../contexts/UserContext';
 
 const ModalLogin = () => {
-  const { dispatch, changePassword, setIsModalReAuthOpen, ...state } =
-    useContext(UserContext);
+  const {
+    dispatch,
+    changePassword,
+    setIsModalReAuthOpen,
+    deleteAccount,
+    ...state
+  } = useContext(UserContext);
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -13,7 +18,9 @@ const ModalLogin = () => {
         Account verification
       </p>
       <p className='text-gray-600  text-xs py-2 px-6'>
-        Please enter your current password to update your account
+        {state.isDeleting
+          ? `Please enter your current password to delete your account. This action can't be reversed`
+          : 'Please enter your current password to update your account'}
       </p>
       <div className='flex flex-col mb-2 mt-2'>
         <div className='flex relative'>
@@ -45,12 +52,24 @@ const ModalLogin = () => {
         </div>
       </div>
       <div className='flex items-center justify-between gap-4 w-full mt-8'>
-        <button
-          type='button'
-          onClick={() => changePassword(state.password)}
-          className='py-2 px-4  bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg '>
-          Change Password
-        </button>
+        {state.isUpdatingPassword && (
+          <button
+            type='button'
+            onClick={() => changePassword(state.password)}
+            className='py-2 px-4  bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg '>
+            Change Password
+          </button>
+        )}
+
+        {state.isDeleting && (
+          <button
+            type='button'
+            onClick={() => deleteAccount(state.password)}
+            className='py-2 px-4  bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg '>
+            Delete account
+          </button>
+        )}
+
         <button
           type='button'
           onClick={() => setIsModalReAuthOpen(false)}

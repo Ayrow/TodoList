@@ -36,8 +36,14 @@ const MyAccount = () => {
       dispatch({ type: 'MISSING_NEW_PASSWORD' });
       // alert('enter password');
     } else {
+      dispatch({ type: 'MODAL_UPDATE_PASSWORD' });
       setIsModalReAuthOpen(true);
     }
+  };
+
+  const verifyAccountToDelete = () => {
+    dispatch({ type: 'MODAL_DELETE' });
+    setIsModalReAuthOpen(true);
   };
 
   useEffect(() => {
@@ -51,7 +57,11 @@ const MyAccount = () => {
           <ModalLogin newPassword={state.newPassword} />
         </div>
       )}
-      {state.alert.isOpen && <AlertUser />}
+      {state.alert.isOpen && (
+        <div className=' fixed flex w-full h-full bg-white bg-opacity-80 z-50 place-content-center'>
+          <AlertUser />
+        </div>
+      )}
       <form className='container max-w-2xl mx-auto shadow-md md:w-3/4 pt-5'>
         <div className='p-4 bg-gray-100 border-t-2 border-indigo-400 rounded-lg bg-opacity-5'>
           <div className='max-w-sm mx-auto md:w-full md:mx-0'>
@@ -155,6 +165,7 @@ const MyAccount = () => {
             </button>
             <button
               type='button'
+              onClick={() => verifyAccountToDelete()}
               className='py-2 px-4  bg-red-600 hover:bg-red-700 focus:ring-red-500 focus:ring-offset-red-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg '>
               DELETE ACCOUNT
             </button>

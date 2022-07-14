@@ -2,6 +2,7 @@ import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../contexts/UserContext';
 import { Link } from 'react-router-dom';
+import AlertUser from '../components/AlertUser';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ const Register = () => {
   const handleRegister = (e) => {
     e.preventDefault();
     if (state.password !== state.confirmPassword) {
-      dispatch({ type: 'PASSWORD_DONT_MATCH' });
+      dispatch({ type: 'PASSWORDS_DONT_MATCH' });
     } else {
       createUser();
       navigate('/todolist');
@@ -22,7 +23,12 @@ const Register = () => {
   };
 
   return (
-    <div className='flex justify-center pt-5 '>
+    <div className='flex justify-center pt-5 relative'>
+      {state.alert.isOpen && (
+        <div className=' fixed flex w-full h-full bg-white bg-opacity-80 z-50 place-content-center'>
+          <AlertUser />
+        </div>
+      )}
       <div className='flex flex-col w-1/3 px-4 pt-8 bg-white rounded-lg shadow dark:bg-gray-800 sm:px-6 md:px-8 lg:px-10'>
         <div className='self-center text-xl font-light text-gray-800 sm:text-2xl dark:text-white'>
           Create a new account
