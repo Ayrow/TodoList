@@ -2,12 +2,13 @@ import React, { useContext } from 'react';
 import { useState } from 'react';
 import { UserContext } from '../../contexts/UserContext';
 
-const ModalLogin = () => {
+const ModalReAuth = () => {
   const {
     dispatch,
     changePassword,
     setIsModalReAuthOpen,
     deleteAccount,
+    updateAccount,
     ...state
   } = useContext(UserContext);
   const [showPassword, setShowPassword] = useState(false);
@@ -19,7 +20,7 @@ const ModalLogin = () => {
       </p>
       <p className='text-gray-600  text-xs py-2 px-6'>
         {state.isDeleting
-          ? `Please enter your current password to delete your account. This action can't be reversed`
+          ? `Please enter your current password to delete your account and all your data. This action can't be reversed`
           : 'Please enter your current password to update your account'}
       </p>
       <div className='flex flex-col mb-2 mt-2'>
@@ -60,13 +61,20 @@ const ModalLogin = () => {
             Change Password
           </button>
         )}
-
         {state.isDeleting && (
           <button
             type='button'
             onClick={() => deleteAccount(state.password)}
             className='py-2 px-4  bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg '>
             Delete account
+          </button>
+        )}
+        {state.isUpdatingUserInfo && (
+          <button
+            type='button'
+            onClick={() => updateAccount(state.password)}
+            className='py-2 px-4  bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg '>
+            Update account
           </button>
         )}
 
@@ -81,4 +89,4 @@ const ModalLogin = () => {
   );
 };
 
-export default ModalLogin;
+export default ModalReAuth;

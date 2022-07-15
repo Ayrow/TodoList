@@ -12,6 +12,7 @@ export const UserReducer = (state, action) => {
         email: '',
         password: '',
         confirmPassword: '',
+        newPassword: '',
       };
     case 'PASSWORDS_DONT_MATCH':
       return {
@@ -28,6 +29,21 @@ export const UserReducer = (state, action) => {
         ...state,
         newPassword: '',
         password: '',
+        alert: {
+          isOpen: true,
+          type: 'success',
+          message: 'Your password has been updated',
+          color: 'bg-green-200 border-green-600 text-green-600',
+        },
+      };
+    case 'ALERT_UPDATED_ACCOUNT':
+      return {
+        ...state,
+        username: '',
+        email: '',
+        phoneNumber: '',
+
+        isUpdatingUserInfo: false,
         alert: {
           isOpen: true,
           type: 'success',
@@ -55,6 +71,16 @@ export const UserReducer = (state, action) => {
           color: 'bg-red-200 border-red-600 text-red-600',
         },
       };
+    case 'NOTHING_TO_UPDATE':
+      return {
+        ...state,
+        alert: {
+          isOpen: true,
+          type: 'Error',
+          message: 'You must enter enter new contact details before saving',
+          color: 'bg-red-200 border-red-600 text-red-600',
+        },
+      };
     case 'CLOSE_ALERT':
       return {
         ...state,
@@ -68,18 +94,28 @@ export const UserReducer = (state, action) => {
         ...state,
         isUpdatingPassword: true,
         isDeleting: false,
+        isUpdatingUserInfo: false,
       };
     case 'MODAL_DELETE':
       return {
         ...state,
         isDeleting: true,
         isUpdatingPassword: false,
+        isUpdatingUserInfo: false,
+      };
+    case 'MODAL_UPDATE_USER_INFO':
+      return {
+        ...state,
+        isUpdatingPassword: false,
+        isDeleting: false,
+        isUpdatingUserInfo: true,
       };
     case 'CLOSE_MODAL':
       return {
         ...state,
         isUpdatingPassword: false,
         isDeleting: false,
+        isUpdatingUserInfo: false,
       };
     default:
       return state;

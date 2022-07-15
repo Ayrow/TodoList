@@ -2,25 +2,25 @@ import {
   createUserWithEmailAndPassword,
   deleteUser,
   EmailAuthProvider,
-  GoogleAuthProvider,
   reauthenticateWithCredential,
   signInWithEmailAndPassword,
-  signInWithPopup,
+  updateEmail,
   updatePassword,
 } from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
+import { deleteDoc, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import { useState } from 'react';
 import { createContext, useContext, useReducer } from 'react';
 import { UserReducer } from '../reducers/User.reducer';
-import { auth, db, googleProvider } from '../utils/firebase-config';
+import { auth, db } from '../utils/firebase-config';
 import { AuthContext } from './AuthContext';
 
 export const UserContext = createContext();
 
 const initialState = {
-  user: {},
   username: '',
+  name: '',
   email: '',
+  phoneNumber: '',
   password: '',
   confirmPassword: '',
   newPassword: '',
@@ -36,21 +36,23 @@ const initialState = {
 };
 
 export const UserProvider = ({ children }) => {
-  const { currentUser, handleSignout } = useContext(AuthContext);
+  const { currentUser } = useContext(AuthContext);
   const [state, dispatch] = useReducer(UserReducer, initialState);
   const [isModalReAuthOpen, setIsModalReAuthOpen] = useState(false);
+  const [user, setUser] = useState({});
 
   const createUser = () => {
     createUserWithEmailAndPassword(auth, state.email, state.password)
       .then((userCredential) => {
         const addUserToDb = async () => {
-          await setDoc(doc(db, 'users', currentUser.uid), {
+          await setDoc(doc(db, 'users', auth.currentUser.uid), {
             username: state.username,
             email: state.email,
           });
         };
+
         addUserToDb();
-        dispatch({ type: 'EMPTY_FORMS' });
+        // dispatch({ type: 'EMPTY_FORMS' });
       })
       .catch((error) => {
         if (error.code === 'auth/email-already-in-use') {
@@ -68,40 +70,54 @@ export const UserProvider = ({ children }) => {
         console.log(error);
         if (error.code === 'auth/wrong-password') {
           alert('Wrong credentials');
-          handleSignout();
         }
       });
   };
 
-  const loginWithGoogle = () => {
-    signInWithPopup(auth, googleProvider)
-      .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        console.log(credential);
-        const token = credential.accessToken;
-        console.log('token:', token);
-        const user = result.user;
-        console.log('user:', user);
+  // const loginWithGoogle = () => {
+  //   signInWithPopup(auth, googleProvider)
+  //     .then((result) => {
+  //       // This gives you a Google Access Token. You can use it to access the Google API.
+  //       const credential = GoogleAuthProvider.credentialFromResult(result);
+  //       console.log(credential);
+  //       const token = credential.accessToken;
+  //       console.log('token:', token);
+  //       const user = result.user;
+  //       console.log('user:', user);
 
-        const addUserToDb = async () => {
-          await setDoc(doc(db, 'users', user.uid), {
-            username: user.displayName,
-            email: user.email,
-          });
-        };
-        addUserToDb();
-      })
-      .catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.customData.email;
-        // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        // ...
-      });
+  //       const addUserToDb = async () => {
+  //         await setDoc(doc(db, 'users', user.uid), {
+  //           username: user.displayName,
+  //           email: user.email,
+  //         });
+  //       };
+  //       addUserToDb();
+  //     })
+  //     .catch((error) => {
+  //       // Handle Errors here.
+  //       const errorCode = error.code;
+  //       console.log(errorCode);
+  //       const errorMessage = error.message;
+  //       console.log(errorMessage);
+  //       // The email of the user's account used.
+  //       const email = error.customData.email;
+  //       console.log(email);
+  //       // The AuthCredential type that was used.
+  //       const credential = GoogleAuthProvider.credentialFromError(error);
+  //       console.log(credential);
+  //       // ...
+  //     });
+  // };
+
+  const fetchUserInfo = async () => {
+    const docRef = doc(db, 'users', currentUser.uid);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      setUser(docSnap.data());
+    } else {
+      // doc.data() will be undefined in this case
+      console.log('No such document!');
+    }
   };
 
   const changePassword = async (password) => {
@@ -130,9 +146,69 @@ export const UserProvider = ({ children }) => {
           alert(error.message);
           // ...
         });
-
+      dispatch({ type: 'EMPTY_FORMS' });
       console.log('success in updating');
     }
+  };
+
+  const updateAccount = async (password) => {
+    console.log('new email', state.email);
+
+    const credential = EmailAuthProvider.credential(
+      currentUser.email,
+      password
+    );
+
+    await reauthenticateWithCredential(auth.currentUser, credential);
+
+    if (state.email) {
+      await updateEmail(auth.currentUser, state.email)
+        .then(() => {
+          const userRef = doc(db, 'users', currentUser);
+          updateDoc(userRef, {
+            email: state.email,
+          });
+          // Email updated!
+          // ...
+        })
+        .catch((error) => {
+          // An error occurred
+          // ...
+        });
+    } else {
+      const userRef = doc(db, 'users', currentUser);
+      console.log(state.username, state.phoneNumber, state.phoneNumber);
+      updateDoc(userRef, {
+        username: state.username,
+        phoneNumber: state.phoneNumber,
+      });
+    }
+
+    // const userRef = doc(db, 'users', currentUser);
+    // if (state.email) {
+    //   await updateDoc(userRef, {
+    //     username: state.username,
+    //     phoneNumber: state.phoneNumber,
+    //   });
+    // } else {
+    //   await updateEmail(auth.currentUser, state.email)
+    //     .then(() => {
+    //       // Email updated!
+    //       // ...
+    //     })
+    //     .catch((error) => {
+    //       // An error occurred
+    //       // ...
+    //     });
+
+    //   await updateDoc(userRef, {
+    //     email: state.email,
+    //     username: state.username,
+    //     phoneNumber: state.phoneNumber,
+    //   });
+    // }
+
+    dispatch({ type: 'ALERT_UPDATED_ACCOUNT' });
   };
 
   const deleteAccount = async (password) => {
@@ -147,9 +223,10 @@ export const UserProvider = ({ children }) => {
     );
 
     // Pass result.user here
+    await deleteDoc(doc(db, 'users', currentUser.uid));
+    await deleteDoc(doc(db, 'todos', currentUser.uid));
     await deleteUser(result.user);
-
-    console.log('success in deleting');
+    console.log('success in deleting your account');
   };
 
   const closeAlert = () => {
@@ -163,7 +240,9 @@ export const UserProvider = ({ children }) => {
         dispatch,
         createUser,
         loginUserWithEmailAndPassword,
-        loginWithGoogle,
+        fetchUserInfo,
+        user,
+        updateAccount,
         deleteAccount,
         changePassword,
         isModalReAuthOpen,

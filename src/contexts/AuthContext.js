@@ -10,7 +10,7 @@ export const AuthProvider = ({ children }) => {
   const handleSignout = () => {
     signOut(auth)
       .then(() => {
-        // navigate('/login');
+        console.log('signed out');
       })
       .catch((error) => {
         console.log(error);
