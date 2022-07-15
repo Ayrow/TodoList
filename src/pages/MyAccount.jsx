@@ -33,7 +33,7 @@ const MyAccount = () => {
   };
 
   const verifyAccountToUpdate = () => {
-    if (!state.name && !state.phoneNumber && !state.email) {
+    if (!state.username && !state.phoneNumber && !state.email) {
       dispatch({ type: 'NOTHING_TO_UPDATE' });
     } else {
       dispatch({ type: 'MODAL_UPDATE_USER_INFO' });
@@ -78,7 +78,7 @@ const MyAccount = () => {
               <div className=' relative '>
                 <input
                   type='text'
-                  id='user-info-email'
+                  name='email'
                   className=' rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent'
                   placeholder={user.email}
                   onChange={(e) =>
@@ -99,13 +99,14 @@ const MyAccount = () => {
                 <div className=' relative '>
                   <input
                     type='text'
-                    id='user-info-name'
+                    name='username'
                     className=' rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent'
                     placeholder={user.username}
+                    value={state.username}
                     onChange={(e) =>
                       dispatch({
                         type: 'SET_USER_DATA',
-                        payload: { key: 'name', value: e.target.value },
+                        payload: { key: 'username', value: e.target.value },
                       })
                     }
                   />
@@ -116,8 +117,10 @@ const MyAccount = () => {
                   <input
                     type='text'
                     id='user-info-phone'
+                    name='phoneNumber'
                     className=' rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent'
                     placeholder={user.phoneNumber || 'Phone Number'}
+                    value={state.phoneNumber}
                     onChange={(e) =>
                       dispatch({
                         type: 'SET_USER_DATA',
@@ -139,6 +142,7 @@ const MyAccount = () => {
                   id='password'
                   className='relative rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent '
                   name='password'
+                  value={state.newPassword}
                   placeholder='New Password'
                   onChange={(event) =>
                     dispatch({

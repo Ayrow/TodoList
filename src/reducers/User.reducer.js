@@ -42,12 +42,13 @@ export const UserReducer = (state, action) => {
         username: '',
         email: '',
         phoneNumber: '',
-
+        isDeleting: false,
+        isUpdatingPassword: false,
         isUpdatingUserInfo: false,
         alert: {
           isOpen: true,
           type: 'success',
-          message: 'Your password has been updated',
+          message: 'Your account has been updated',
           color: 'bg-green-200 border-green-600 text-green-600',
         },
       };

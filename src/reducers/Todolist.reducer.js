@@ -58,12 +58,6 @@ export const TodolistReducer = (state, action) => {
         isModalOpen: true,
         isEditing: true,
       };
-    case 'UPDATE_ARRAY':
-      return {
-        ...state,
-        tempArray: action.payload,
-        todoArray: action.payload,
-      };
     case 'UPDATE_EDIT_TODO':
       return {
         ...state,

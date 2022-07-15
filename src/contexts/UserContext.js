@@ -152,14 +152,13 @@ export const UserProvider = ({ children }) => {
   };
 
   const updateAccount = async (password) => {
-    console.log('new email', state.email);
-
     const credential = EmailAuthProvider.credential(
       currentUser.email,
       password
     );
 
     await reauthenticateWithCredential(auth.currentUser, credential);
+    const userRef = doc(db, 'users', currentUser.uid);
 
     if (state.email) {
       await updateEmail(auth.currentUser, state.email)
@@ -168,47 +167,25 @@ export const UserProvider = ({ children }) => {
           updateDoc(userRef, {
             email: state.email,
           });
-          // Email updated!
-          // ...
         })
         .catch((error) => {
           // An error occurred
           // ...
         });
-    } else {
-      const userRef = doc(db, 'users', currentUser);
-      console.log(state.username, state.phoneNumber, state.phoneNumber);
-      updateDoc(userRef, {
-        username: state.username,
+    }
+    if (state.phoneNumber) {
+      await updateDoc(userRef, {
         phoneNumber: state.phoneNumber,
       });
     }
-
-    // const userRef = doc(db, 'users', currentUser);
-    // if (state.email) {
-    //   await updateDoc(userRef, {
-    //     username: state.username,
-    //     phoneNumber: state.phoneNumber,
-    //   });
-    // } else {
-    //   await updateEmail(auth.currentUser, state.email)
-    //     .then(() => {
-    //       // Email updated!
-    //       // ...
-    //     })
-    //     .catch((error) => {
-    //       // An error occurred
-    //       // ...
-    //     });
-
-    //   await updateDoc(userRef, {
-    //     email: state.email,
-    //     username: state.username,
-    //     phoneNumber: state.phoneNumber,
-    //   });
-    // }
-
+    if (state.username) {
+      await updateDoc(userRef, {
+        username: state.username,
+      });
+    }
+    setIsModalReAuthOpen(false);
     dispatch({ type: 'ALERT_UPDATED_ACCOUNT' });
+    fetchUserInfo();
   };
 
   const deleteAccount = async (password) => {

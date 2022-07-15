@@ -9,7 +9,7 @@ import {
 } from 'firebase/firestore';
 import { createContext, useContext, useReducer } from 'react';
 import { TodolistReducer } from '../reducers/Todolist.reducer';
-import { db } from '../utils/firebase-config';
+import { auth, db } from '../utils/firebase-config';
 import { AuthContext } from './AuthContext';
 
 const initialState = {
@@ -19,7 +19,6 @@ const initialState = {
   editID: null,
   isEditing: false,
   todoArray: [],
-  tempArray: [],
   isModalOpen: false,
   alert: {
     open: false,
@@ -72,10 +71,10 @@ export const TodolistProvider = ({ children }) => {
     dispatch({ type: 'EDIT_TODO', payload: { item, index } });
   };
 
-  const updateTodo = async () => {
-    const todoRef = doc(db, 'todos', currentUser.uid);
+  const updateTodo = async (tempList) => {
+    const todoRef = doc(db, 'todos', auth.currentUser.uid);
     await updateDoc(todoRef, {
-      todos: state.tempArray,
+      todos: tempList,
     });
     dispatch({ type: 'UPDATE_EDIT_TODO' });
   };
