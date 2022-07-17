@@ -14,7 +14,11 @@ const ModalEditTodo = () => {
       }
       return item;
     });
-    await updateTodo(tempList);
+    if (todoUpdated) {
+      await updateTodo(tempList);
+    } else {
+      dispatch({ type: 'MISSING_NEW_TODO' });
+    }
   };
 
   return (

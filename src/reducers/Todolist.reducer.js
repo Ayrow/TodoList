@@ -58,6 +58,18 @@ export const TodolistReducer = (state, action) => {
         isModalOpen: true,
         isEditing: true,
       };
+    case 'MISSING_NEW_TODO':
+      return {
+        ...state,
+        isModalOpen: false,
+        isEditing: false,
+        alert: {
+          ...alert,
+          open: true,
+          message: 'Error! TPlease enter a new todo',
+          type: 'bg-red-500 text-white',
+        },
+      };
     case 'UPDATE_EDIT_TODO':
       return {
         ...state,
