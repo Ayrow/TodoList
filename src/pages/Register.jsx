@@ -60,6 +60,7 @@ const Register = () => {
                 />
               </div>
             </div>
+
             <div className='flex flex-col mb-2'>
               <div className=' relative '>
                 <input
@@ -78,6 +79,7 @@ const Register = () => {
                 />
               </div>
             </div>
+
             <div className='flex flex-col mb-2'>
               <div className='flex relative '>
                 <input
@@ -104,6 +106,7 @@ const Register = () => {
                 </div>
               </div>
             </div>
+
             <div className='flex flex-col mb-2'>
               <div className='flex relative'>
                 <input
