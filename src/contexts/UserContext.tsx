@@ -18,6 +18,14 @@ interface IUserContextProviderProps {
   children: ReactNode;
 }
 
+export type UserAction = {
+  type: string;
+  payload?: {
+    key?: string;
+    value?: string;
+  };
+};
+
 const initialState = {
   username: '',
   name: '',
@@ -35,14 +43,29 @@ const initialState = {
     type: '',
     color: '',
   },
-  dispatch: () => {},
 };
 
-export type UserState = typeof initialState & {
-  dispatch: () => {};
-};
+export type UserState = typeof initialState;
 
-export const UserContext = createContext<UserState>(initialState);
+interface IUserContext {
+  state?: UserState;
+  dispatch?: React.Dispatch<UserAction>;
+  createUser?: () => void;
+  loginUserWithEmailAndPassword?: () => void;
+  fetchUserInfo?: () => void;
+  user?: {};
+  updateAccount?: (password: string) => void;
+  deleteAccount?: (password: string) => void;
+  changePassword?: (password: string) => void;
+  isModalReAuthOpen?: boolean;
+  closeAlert?: () => void;
+  setIsModalReAuthOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export const UserContext = createContext<IUserContext>({
+  state: initialState,
+  dispatch: () => undefined,
+});
 
 export const UserProvider: React.FC = ({
   children,
@@ -182,6 +205,7 @@ export const UserProvider: React.FC = ({
           });
         })
         .catch((error) => {
+          console.log('error', error);
           // An error occurred
           // ...
         });

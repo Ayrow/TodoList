@@ -1,12 +1,4 @@
-import { UserState } from '../contexts/UserContext';
-
-type UserAction = {
-  type: string;
-  payload?: {
-    key?: string;
-    value?: string;
-  };
-};
+import { UserState, UserAction } from '../contexts/UserContext';
 
 export const UserReducer = (state: UserState, action: UserAction) => {
   switch (action.type) {
