@@ -69,6 +69,7 @@ interface ITodoContext {
   closeModal?: () => void;
   closeAlert?: () => void;
   addTodo?: () => void;
+  emptyTodoArray?: () => void;
 }
 
 export const TodolistContext = createContext<ITodoContext>({
@@ -105,7 +106,9 @@ export const TodolistProvider: React.FC = ({
       await setDoc(todosRef, {
         todos: [state.todo],
       });
+      dispatch({ type: 'ADDING_TODO' });
     }
+    fetchTodos();
   };
 
   const deleteTodo = async (todoToUpdate: string) => {
@@ -133,6 +136,10 @@ export const TodolistProvider: React.FC = ({
     dispatch({ type: 'CLEARED_LIST' });
   };
 
+  const emptyTodoArray = () => {
+    dispatch({ type: 'EMPTY_TODO_ARRAY' });
+  };
+
   const closeModal = () => {
     state.isModalOpen = false;
     state.isEditing = false;
@@ -155,6 +162,7 @@ export const TodolistProvider: React.FC = ({
         clearList,
         closeModal,
         closeAlert,
+        emptyTodoArray,
       }}>
       {children}
     </TodolistContext.Provider>

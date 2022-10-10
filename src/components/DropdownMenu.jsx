@@ -2,10 +2,17 @@ import { Fragment } from 'react';
 import { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
+import { TodolistContext } from '../contexts/TodolistContext';
 
 const DropdownMenu = ({ setIsDropdownOpen }) => {
   const navigate = useNavigate();
   const { currentUser, handleSignout } = useContext(AuthContext);
+  const { emptyTodoArray } = useContext(TodolistContext);
+
+  const logout = () => {
+    handleSignout();
+    emptyTodoArray();
+  };
 
   return (
     <div
@@ -26,7 +33,7 @@ const DropdownMenu = ({ setIsDropdownOpen }) => {
               </span>
             </Link>
             <button
-              onClick={handleSignout}
+              onClick={logout}
               className='block px-4 py-2 w-full text-md text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-100 dark:hover:text-white dark:hover:bg-gray-600'>
               <span className='flex flex-col'>
                 <span>Logout</span>

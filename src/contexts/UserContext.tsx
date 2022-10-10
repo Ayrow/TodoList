@@ -13,6 +13,7 @@ import { createContext, useContext, useReducer, ReactNode } from 'react';
 import { UserReducer } from '../reducers/User.reducer';
 import { auth, db } from '../utils/firebase-config';
 import { AuthContext } from './AuthContext';
+import { TodolistContext } from './TodolistContext';
 
 interface IUserContextProviderProps {
   children: ReactNode;
@@ -71,6 +72,7 @@ export const UserProvider: React.FC = ({
   children,
 }: IUserContextProviderProps) => {
   const { currentUser } = useContext(AuthContext);
+  const { fetchTodos } = useContext(TodolistContext);
 
   const [state, dispatch] = useReducer(UserReducer, initialState);
 
@@ -101,6 +103,7 @@ export const UserProvider: React.FC = ({
     signInWithEmailAndPassword(auth, state.email, state.password)
       .then((user) => {
         console.log(user);
+        fetchTodos();
       })
       .catch((error) => {
         console.log(error);
@@ -108,6 +111,7 @@ export const UserProvider: React.FC = ({
           alert('Wrong credentials');
         }
       });
+    fetchTodos();
   };
 
   // const loginWithGoogle = () => {
@@ -199,7 +203,7 @@ export const UserProvider: React.FC = ({
     if (state.email) {
       await updateEmail(auth.currentUser, state.email)
         .then(() => {
-          const userRef = doc(db, 'users', currentUser);
+          // const userRef = doc(db, 'users', currentUser);
           updateDoc(userRef, {
             email: state.email,
           });

@@ -110,6 +110,14 @@ export const TodolistReducer = (
           type: 'bg-red-500 text-white',
         },
       };
+    case 'EMPTY_TODO_ARRAY':
+      return {
+        ...state,
+        todo: '',
+        todoToUpdate: '',
+        editID: null,
+        todoArray: [],
+      };
     default:
       return state;
   }
