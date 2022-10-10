@@ -1,4 +1,4 @@
-import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { onAuthStateChanged, signOut, User } from 'firebase/auth';
 import { createContext, useEffect, useState } from 'react';
 import { auth } from '../utils/firebase-config';
 
@@ -6,19 +6,15 @@ interface IAuthContextProviderProps {
   children: React.ReactNode;
 }
 
-interface ICurrentUserType {
-  currentUser: {
-    username: string;
-    name: string;
-    email: string;
-    phoneNumber: number;
-  };
+export interface IUserContextType {
+  currentUser: User | null;
+  handleSignout: () => void;
 }
 
-export const AuthContext = createContext({});
+export const AuthContext = createContext<IUserContextType>(null);
 
 export const AuthProvider = ({ children }: IAuthContextProviderProps) => {
-  const [currentUser, setCurrentUser] = useState<ICurrentUserType>(null);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
 
   const handleSignout = () => {
     signOut(auth)

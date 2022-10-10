@@ -6,6 +6,7 @@ import {
   signInWithEmailAndPassword,
   updateEmail,
   updatePassword,
+  User,
 } from 'firebase/auth';
 import { deleteDoc, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import { useState } from 'react';
