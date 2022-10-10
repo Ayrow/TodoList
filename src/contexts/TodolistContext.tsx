@@ -20,7 +20,7 @@ interface ITodoType {
   todo: string;
 }
 
-interface IInitialStateType {
+export interface IInitialStateType {
   loading: boolean;
   todo: string;
   todoToUpdate: string;
@@ -50,7 +50,31 @@ const initialState: IInitialStateType = {
   },
 };
 
-export const TodolistContext = createContext(initialState);
+export interface ITodolistAction {
+  type: string;
+  payload?: {
+    item: string;
+    index: number;
+  };
+}
+
+interface ITodoContext {
+  state?: IInitialStateType;
+  dispatch?: React.Dispatch<ITodolistAction>;
+  fetchTodos?: () => void;
+  deleteTodo?: (todoToUpdate: string) => void;
+  updateTodo?: (tempList: string[]) => void;
+  editTodo?: (item: string, index: number) => void;
+  clearList?: () => void;
+  closeModal?: () => void;
+  closeAlert?: () => void;
+  addTodo?: () => void;
+}
+
+export const TodolistContext = createContext<ITodoContext>({
+  state: initialState,
+  dispatch: () => undefined,
+});
 
 export const TodolistProvider: React.FC = ({
   children,
@@ -84,7 +108,7 @@ export const TodolistProvider: React.FC = ({
     }
   };
 
-  const deleteTodo = async (todoToUpdate) => {
+  const deleteTodo = async (todoToUpdate: string) => {
     const todoRef = doc(db, 'todos', currentUser.uid);
     await updateDoc(todoRef, {
       todos: arrayRemove(todoToUpdate),
@@ -92,11 +116,11 @@ export const TodolistProvider: React.FC = ({
     dispatch({ type: 'DELETE_TODO' });
   };
 
-  const editTodo = (item, index) => {
+  const editTodo = (item: string, index: number) => {
     dispatch({ type: 'EDIT_TODO', payload: { item, index } });
   };
 
-  const updateTodo = async (tempList) => {
+  const updateTodo = async (tempList: string[]) => {
     const todoRef = doc(db, 'todos', auth.currentUser.uid);
     await updateDoc(todoRef, {
       todos: tempList,

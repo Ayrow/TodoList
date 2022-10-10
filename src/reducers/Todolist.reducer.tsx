@@ -1,12 +1,7 @@
-import { IInitialStateType } from '../contexts/TodolistContext';
-
-interface ITodolistAction {
-  type: string;
-  payload?: {
-    item: string;
-    index: string;
-  };
-}
+import {
+  IInitialStateType,
+  ITodolistAction,
+} from '../contexts/TodolistContext';
 
 export const TodolistReducer = (
   state: IInitialStateType,

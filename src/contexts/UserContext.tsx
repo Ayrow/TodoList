@@ -35,9 +35,12 @@ const initialState = {
     type: '',
     color: '',
   },
+  dispatch: () => {},
 };
 
-export type UserState = typeof initialState;
+export type UserState = typeof initialState & {
+  dispatch: () => {};
+};
 
 export const UserContext = createContext<UserState>(initialState);
 
