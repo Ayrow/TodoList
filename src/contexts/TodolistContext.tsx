@@ -7,12 +7,35 @@ import {
   setDoc,
   updateDoc,
 } from 'firebase/firestore';
-import { createContext, useContext, useReducer } from 'react';
+import { createContext, ReactNode, useContext, useReducer } from 'react';
 import { TodolistReducer } from '../reducers/Todolist.reducer';
 import { auth, db } from '../utils/firebase-config';
 import { AuthContext } from './AuthContext';
 
-const initialState = {
+interface ITodolistContextProviderProps {
+  children: ReactNode;
+}
+
+interface ITodoType {
+  todo: string;
+}
+
+interface IInitialStateType {
+  loading: boolean;
+  todo: string;
+  todoToUpdate: string;
+  editID: null | string;
+  isEditing: boolean;
+  todoArray: ITodoType[];
+  isModalOpen: boolean;
+  alert: {
+    open: boolean;
+    type: string;
+    message: string;
+  };
+}
+
+const initialState: IInitialStateType = {
   loading: false,
   todo: '',
   todoToUpdate: '',
@@ -27,9 +50,11 @@ const initialState = {
   },
 };
 
-export const TodolistContext = createContext();
+export const TodolistContext = createContext(initialState);
 
-export const TodolistProvider = ({ children }) => {
+export const TodolistProvider: React.FC = ({
+  children,
+}: ITodolistContextProviderProps) => {
   const { currentUser } = useContext(AuthContext);
   const [state, dispatch] = useReducer(TodolistReducer, initialState);
 

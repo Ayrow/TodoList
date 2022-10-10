@@ -9,12 +9,14 @@ import {
 } from 'firebase/auth';
 import { deleteDoc, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import { useState } from 'react';
-import { createContext, useContext, useReducer } from 'react';
+import { createContext, useContext, useReducer, ReactNode } from 'react';
 import { UserReducer } from '../reducers/User.reducer';
 import { auth, db } from '../utils/firebase-config';
 import { AuthContext } from './AuthContext';
 
-export const UserContext = createContext();
+interface IUserContextProviderProps {
+  children: ReactNode;
+}
 
 const initialState = {
   username: '',
@@ -35,7 +37,11 @@ const initialState = {
   },
 };
 
-export const UserProvider = ({ children }) => {
+export const UserContext = createContext(initialState);
+
+export const UserProvider: React.FC = ({
+  children,
+}: IUserContextProviderProps) => {
   const { currentUser } = useContext(AuthContext);
   const [state, dispatch] = useReducer(UserReducer, initialState);
   const [isModalReAuthOpen, setIsModalReAuthOpen] = useState(false);

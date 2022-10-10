@@ -2,10 +2,23 @@ import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { createContext, useEffect, useState } from 'react';
 import { auth } from '../utils/firebase-config';
 
-export const AuthContext = createContext();
+interface IAuthContextProviderProps {
+  children: React.ReactNode;
+}
 
-export const AuthProvider = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState(null);
+interface ICurrentUserType {
+  currentUser: {
+    username: string;
+    name: string;
+    email: string;
+    phoneNumber: number;
+  };
+}
+
+export const AuthContext = createContext({});
+
+export const AuthProvider = ({ children }: IAuthContextProviderProps) => {
+  const [currentUser, setCurrentUser] = useState<ICurrentUserType>(null);
 
   const handleSignout = () => {
     signOut(auth)
