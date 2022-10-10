@@ -8,8 +8,8 @@
     "allowUnreachableCode": false,
     "noImplicitReturns": true,
     "noImplicitAny": true,
-    "typeRoots": ["./typings"],
-    "outFile": "./built/combined.js"
+    "typeRoots": ["./typings"]
+    // "outFile": "./built/combined.js"
   },
   "include": ["./**/*"],
   "exclude": ["./plugins/**/*", "./typings/**/*", "./built/**/*"]

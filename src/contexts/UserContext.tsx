@@ -6,7 +6,6 @@ import {
   signInWithEmailAndPassword,
   updateEmail,
   updatePassword,
-  User,
 } from 'firebase/auth';
 import { deleteDoc, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import { useState } from 'react';
@@ -38,13 +37,17 @@ const initialState = {
   },
 };
 
-export const UserContext = createContext(initialState);
+export type UserState = typeof initialState;
+
+export const UserContext = createContext<UserState>(initialState);
 
 export const UserProvider: React.FC = ({
   children,
 }: IUserContextProviderProps) => {
   const { currentUser } = useContext(AuthContext);
+
   const [state, dispatch] = useReducer(UserReducer, initialState);
+
   const [isModalReAuthOpen, setIsModalReAuthOpen] = useState(false);
   const [user, setUser] = useState({});
 
@@ -127,7 +130,7 @@ export const UserProvider: React.FC = ({
     }
   };
 
-  const changePassword = async (password) => {
+  const changePassword = async (password: string) => {
     if (password === state.newPassword) {
       setIsModalReAuthOpen(false);
       dispatch({ type: 'PASSWORD_ALREADY_USED' });
@@ -158,7 +161,7 @@ export const UserProvider: React.FC = ({
     }
   };
 
-  const updateAccount = async (password) => {
+  const updateAccount = async (password: string) => {
     const credential = EmailAuthProvider.credential(
       currentUser.email,
       password
@@ -195,7 +198,7 @@ export const UserProvider: React.FC = ({
     fetchUserInfo();
   };
 
-  const deleteAccount = async (password) => {
+  const deleteAccount = async (password: string) => {
     const credential = EmailAuthProvider.credential(
       currentUser.email,
       password

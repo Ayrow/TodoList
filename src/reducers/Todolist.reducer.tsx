@@ -1,4 +1,17 @@
-export const TodolistReducer = (state, action) => {
+import { IInitialStateType } from '../contexts/TodolistContext';
+
+interface ITodolistAction {
+  type: string;
+  payload?: {
+    item: string;
+    index: string;
+  };
+}
+
+export const TodolistReducer = (
+  state: IInitialStateType,
+  action: ITodolistAction
+) => {
   switch (action.type) {
     case 'FETCH_TODOS':
       return {
@@ -93,7 +106,7 @@ export const TodolistReducer = (state, action) => {
         todo: '',
         todoToUpdate: '',
         editID: null,
-        tempArray: [],
+        // tempArray: [],
         todoArray: [],
         alert: {
           ...alert,
