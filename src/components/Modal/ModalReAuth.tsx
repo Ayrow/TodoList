@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { useState } from 'react';
-import { UserContext } from '../../contexts/UserContext';
+import { UserContext, IUserInitialState } from '../../contexts/UserContext';
 
 const ModalReAuth = () => {
   const {
@@ -13,13 +13,16 @@ const ModalReAuth = () => {
   } = useContext(UserContext);
   const [showPassword, setShowPassword] = useState(false);
 
+  const { isDeleting, isUpdatingPassword, isUpdatingUserInfo, password } =
+    state as IUserInitialState;
+
   return (
     <div className='shadow-lg rounded-2xl p-4 bg-white w-96 text-center mx-auto mt-24 mb-auto'>
       <p className='text-gray-800 text-xl font-bold mt-4'>
         Account verification
       </p>
       <p className='text-gray-600  text-xs py-2 px-6'>
-        {state.isDeleting
+        {isDeleting
           ? `Please enter your current password to delete your account and all your data. This action can't be reversed`
           : 'Please enter your current password to update your account'}
       </p>
@@ -53,26 +56,26 @@ const ModalReAuth = () => {
         </div>
       </div>
       <div className='flex items-center justify-between gap-4 w-full mt-8'>
-        {state.isUpdatingPassword && (
+        {isUpdatingPassword && (
           <button
             type='button'
-            onClick={() => changePassword(state.password)}
+            onClick={() => changePassword(password)}
             className='py-2 px-4  bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg '>
             Change Password
           </button>
         )}
-        {state.isDeleting && (
+        {isDeleting && (
           <button
             type='button'
-            onClick={() => deleteAccount(state.password)}
+            onClick={() => deleteAccount(password)}
             className='py-2 px-4  bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg '>
             Delete account
           </button>
         )}
-        {state.isUpdatingUserInfo && (
+        {isUpdatingUserInfo && (
           <button
             type='button'
-            onClick={() => updateAccount(state.password)}
+            onClick={() => updateAccount(password)}
             className='py-2 px-4  bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg '>
             Update account
           </button>

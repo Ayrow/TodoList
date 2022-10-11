@@ -1,6 +1,6 @@
-import { UserState, UserAction } from '../contexts/UserContext';
+import { IUserInitialState, UserAction } from '../contexts/UserContext';
 
-export const UserReducer = (state: UserState, action: UserAction) => {
+export const UserReducer = (state: IUserInitialState, action: UserAction) => {
   switch (action.type) {
     case 'SET_USER_DATA':
       return {

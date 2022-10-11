@@ -1,24 +1,22 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import EmptyProfile from '../assets/no-profile-picture.svg';
-import { UserContext } from '../contexts/UserContext';
+import { UserContext, IUserInitialState } from '../contexts/UserContext';
 import ModalReAuth from '../components/Modal/ModalReAuth';
 import AlertUser from '../components/AlertUser';
 
-const MyAccount = () => {
+const MyAccount: React.FC = () => {
   const { user, fetchUserInfo } = useContext(UserContext);
 
-  const {
-    changePassword,
-    dispatch,
-    isModalReAuthOpen,
-    setIsModalReAuthOpen,
-    ...state
-  } = useContext(UserContext);
+  const { dispatch, isModalReAuthOpen, setIsModalReAuthOpen, ...state } =
+    useContext(UserContext);
+
+  const { username, newPassword, phoneNumber, email, alert } =
+    state as IUserInitialState;
 
   const [showPassword, setShowPassword] = useState(false);
 
   const verifyAccountForPassword = () => {
-    if (state.newPassword === '') {
+    if (newPassword === '') {
       dispatch({ type: 'MISSING_NEW_PASSWORD' });
       // alert('enter password');
     } else {
@@ -33,7 +31,7 @@ const MyAccount = () => {
   };
 
   const verifyAccountToUpdate = () => {
-    if (!state.username && !state.phoneNumber && !state.email) {
+    if (!username && !phoneNumber && !email) {
       dispatch({ type: 'NOTHING_TO_UPDATE' });
     } else {
       dispatch({ type: 'MODAL_UPDATE_USER_INFO' });
@@ -49,10 +47,12 @@ const MyAccount = () => {
     <section className='bg-white relative'>
       {isModalReAuthOpen && (
         <div className='absolute w-full h-full bg-black bg-opacity-80 flex z-50'>
-          <ModalReAuth newPassword={state.newPassword} />
+          <ModalReAuth
+          // newPassword={state.newPassword}
+          />
         </div>
       )}
-      {state.alert.isOpen && (
+      {alert.isOpen && (
         <div className=' fixed flex w-full h-full bg-white bg-opacity-80 z-50 place-content-center'>
           <AlertUser />
         </div>
@@ -102,7 +102,7 @@ const MyAccount = () => {
                     name='username'
                     className=' rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent'
                     placeholder={user.username}
-                    value={state.username}
+                    value={username}
                     onChange={(e) =>
                       dispatch({
                         type: 'SET_USER_DATA',
@@ -120,7 +120,7 @@ const MyAccount = () => {
                     name='phoneNumber'
                     className=' rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent'
                     placeholder={user.phoneNumber || 'Phone Number'}
-                    value={state.phoneNumber}
+                    value={phoneNumber}
                     onChange={(e) =>
                       dispatch({
                         type: 'SET_USER_DATA',
@@ -142,7 +142,7 @@ const MyAccount = () => {
                   id='password'
                   className='relative rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent '
                   name='password'
-                  value={state.newPassword}
+                  value={newPassword}
                   placeholder='New Password'
                   onChange={(event) =>
                     dispatch({

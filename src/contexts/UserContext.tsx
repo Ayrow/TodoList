@@ -27,7 +27,26 @@ export type UserAction = {
   };
 };
 
-const initialState = {
+export interface IUserInitialState {
+  username: string;
+  name: string;
+  email: string;
+  phoneNumber: string;
+  password: string;
+  confirmPassword: string;
+  newPassword: string;
+  isDeleting: boolean;
+  isUpdatingPassword: boolean;
+  isUpdatingUserInfo: boolean;
+  alert: {
+    isOpen: boolean;
+    message: string;
+    type: string;
+    color: string;
+  };
+}
+
+const initialState: IUserInitialState = {
   username: '',
   name: '',
   email: '',
@@ -46,24 +65,29 @@ const initialState = {
   },
 };
 
-export type UserState = typeof initialState;
-
-interface IUserContext {
-  state?: UserState;
-  dispatch?: React.Dispatch<UserAction>;
-  createUser?: () => void;
-  loginUserWithEmailAndPassword?: () => void;
-  fetchUserInfo?: () => void;
-  user?: {};
-  updateAccount?: (password: string) => void;
-  deleteAccount?: (password: string) => void;
-  changePassword?: (password: string) => void;
-  isModalReAuthOpen?: boolean;
-  closeAlert?: () => void;
-  setIsModalReAuthOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+interface IUser {
+  profileimage?: string;
+  username: string;
+  email: string;
+  phoneNumber?: string;
 }
 
-export const UserContext = createContext<IUserContext>({
+interface IUserContext {
+  state: IUserInitialState;
+  user: IUser | null;
+  dispatch: React.Dispatch<UserAction>;
+  createUser: () => void;
+  loginUserWithEmailAndPassword: () => void;
+  fetchUserInfo: () => void;
+  updateAccount: (password: string) => void;
+  deleteAccount: (password: string) => void;
+  changePassword: (password: string) => void;
+  isModalReAuthOpen: boolean;
+  closeAlert: () => void;
+  setIsModalReAuthOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export const UserContext = createContext<Partial<IUserContext>>({
   state: initialState,
   dispatch: () => undefined,
 });
@@ -77,7 +101,10 @@ export const UserProvider: React.FC = ({
   const [state, dispatch] = useReducer(UserReducer, initialState);
 
   const [isModalReAuthOpen, setIsModalReAuthOpen] = useState(false);
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState<IUser>({
+    username: '',
+    email: '',
+  });
 
   const createUser = () => {
     createUserWithEmailAndPassword(auth, state.email, state.password)
@@ -153,7 +180,7 @@ export const UserProvider: React.FC = ({
     const docRef = doc(db, 'users', currentUser.uid);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
-      setUser(docSnap.data());
+      setUser(docSnap.data() as IUser);
     } else {
       // doc.data() will be undefined in this case
       console.log('No such document!');

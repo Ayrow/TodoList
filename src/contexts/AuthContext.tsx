@@ -1,7 +1,6 @@
 import { onAuthStateChanged, signOut, User } from 'firebase/auth';
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import { auth } from '../utils/firebase-config';
-import { TodolistContext } from './TodolistContext';
 
 interface IAuthContextProviderProps {
   children: React.ReactNode;
