@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import Background from '../assets/home-bg.svg';
 
-const Home = () => {
+const Home: React.FC = () => {
   return (
     <div className='bg-indigo-900 relative overflow-hidden h-full'>
       <img

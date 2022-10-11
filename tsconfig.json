@@ -11,6 +11,6 @@
     "typeRoots": ["./typings"]
     // "outFile": "./built/combined.js"
   },
-  "include": ["./**/*"],
+  "include": ["./**/*", "src/components"],
   "exclude": ["./plugins/**/*", "./typings/**/*", "./built/**/*"]
 }
