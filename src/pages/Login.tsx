@@ -2,13 +2,13 @@ import { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { UserContext } from '../contexts/UserContext';
 
-const Login = () => {
+const Login: React.FC = () => {
   const { dispatch, loginUserWithEmailAndPassword } = useContext(UserContext);
   const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSignin = (e) => {
+  const handleSignin = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     loginUserWithEmailAndPassword();
     navigate('/todolist');
