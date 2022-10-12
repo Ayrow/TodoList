@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { UserContext } from '../contexts/UserContext';
+import { IUserInitialState, UserContext } from '../contexts/UserContext';
 import { Link } from 'react-router-dom';
 import AlertUser from '../components/AlertUser';
 
@@ -8,12 +8,14 @@ const Register = () => {
   const navigate = useNavigate();
   const { dispatch, createUser, ...state } = useContext(UserContext);
 
+  const { password, confirmPassword, alert } = state as IUserInitialState;
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const handleRegister = (e) => {
+  const handleRegister = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (state.password !== state.confirmPassword) {
+    if (password !== confirmPassword) {
       dispatch({ type: 'PASSWORDS_DONT_MATCH' });
     } else {
       createUser();
@@ -23,7 +25,7 @@ const Register = () => {
 
   return (
     <div className='flex justify-center pt-5 relative'>
-      {state.alert.isOpen && (
+      {alert.isOpen && (
         <div className=' fixed flex w-full h-full bg-white bg-opacity-80 z-50 place-content-center'>
           <AlertUser />
         </div>
