@@ -19,14 +19,14 @@ const App = () => {
       <Navbar />
       <Routes>
         <Route element={<PrivateRoute />}>
-          <Route exact path='/my-account' element={<MyAccount />} />
+          <Route path='/my-account' element={<MyAccount />} />
         </Route>
-        <Route exact path='/' element={<Home />} />
-        <Route exact path='/todolist' element={<TodoList />} />
+        <Route path='/' element={<Home />} />
+        <Route path='/todolist' element={<TodoList />} />
 
         <Route element={<RouteNewUserOnly />}>
-          <Route exact path='/login' element={<Login />} />
-          <Route exact path='/register' element={<Register />} />
+          <Route path='/login' element={<Login />} />
+          <Route path='/register' element={<Register />} />
         </Route>
         <Route path='/*' element={<PageNotFound />} />
       </Routes>

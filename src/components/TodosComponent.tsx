@@ -1,5 +1,8 @@
-import React, { useContext, useEffect } from 'react';
-import { TodolistContext } from '../contexts/TodolistContext';
+import { useContext, useEffect } from 'react';
+import {
+  IInitialStateType,
+  TodolistContext,
+} from '../contexts/TodolistContext';
 import AlertTodo from './AlertTodo';
 import ModalTodolist from './Modal/ModalTodolist';
 
@@ -12,26 +15,28 @@ const TodosComponent = () => {
     updateTodo,
     editTodo,
     clearList,
-    todoArray,
     ...state
   } = useContext(TodolistContext);
 
-  const handleSubmit = (e) => {
+  const { todo, todoArray, isModalOpen, alert } = state as IInitialStateType;
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!state.todo) {
+    if (!todo) {
       dispatch({ type: 'MISSING_TODO' });
     } else {
       addTodo();
+      console.log('todoArray', todoArray);
     }
   };
 
   useEffect(() => {
     fetchTodos();
-  }, [todoArray]);
+  }, []);
 
   return (
     <div className='flex flex-col place-items-center relative h-screen'>
-      {state.isModalOpen && (
+      {isModalOpen && (
         <div className='absolute z-40 bg-black bg-opacity-80 w-full h-full flex '>
           <ModalTodolist />
         </div>
@@ -41,7 +46,7 @@ const TodosComponent = () => {
       </h1>
       <div className='flex flex-col mt-5 w-full max-w-xl px-4 py-8 bg-white rounded-lg shadow dark:bg-gray-800 sm:px-6 md:px-8 lg:px-10 '>
         <div className='relative self-center mb-6 text-lg font-light text-gray-600 sm:text-2xl dark:text-white'>
-          {state.alert.open && <AlertTodo />}
+          {alert.open && <AlertTodo />}
 
           <form action='' onSubmit={(e) => handleSubmit(e)} className='p-5'>
             <div className='flex'>
@@ -49,7 +54,7 @@ const TodosComponent = () => {
                 type='text'
                 name='todo'
                 id='todo'
-                value={state.todo}
+                value={todo}
                 onChange={(e) =>
                   dispatch({ type: 'SET_TODO', payload: e.target.value })
                 }
@@ -63,7 +68,7 @@ const TodosComponent = () => {
             </div>
             {todoArray.length > 0 && (
               <div className='flex flex-col place-items-center'>
-                {todoArray.map((item, index) => {
+                {todoArray?.map((item, index) => {
                   return (
                     <div key={index} className=' w-full mt-4  '>
                       <div className=' capitalize grid grid-cols-3 py-2 px-4 bg-slate-200 text-black w-full text-center text-lg font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg '>

@@ -7,13 +7,13 @@ import {
   setDoc,
   updateDoc,
 } from 'firebase/firestore';
-import { createContext, ReactNode, useContext, useReducer } from 'react';
+import { createContext, useContext, useReducer } from 'react';
 import { TodolistReducer } from '../reducers/Todolist.reducer';
 import { auth, db } from '../utils/firebase-config';
 import { AuthContext } from './AuthContext';
 
 interface ITodolistContextProviderProps {
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
 interface ITodoType {
@@ -50,29 +50,38 @@ const initialState: IInitialStateType = {
   },
 };
 
-export interface ITodolistAction {
-  type: string;
-  payload?: {
-    item: string;
-    index: number;
-  };
-}
+export type TodolistAction =
+  | {
+      type:
+        | 'MISSING_TODO'
+        | 'ADDING_TODO'
+        | 'DELETE_TODO'
+        | 'MISSING_NEW_TODO'
+        | 'UPDATE_EDIT_TODO'
+        | 'CLEARED_LIST'
+        | 'EMPTY_TODO_ARRAY';
+    }
+  | {
+      type: 'FETCH_TODOS' | 'CONFIRM_DELETE' | 'SET_TODO';
+      payload: string | ITodoType;
+    }
+  | { type: 'EDIT_TODO'; payload: { item: string; index: number } };
 
 interface ITodoContext {
-  state?: IInitialStateType;
-  dispatch?: React.Dispatch<ITodolistAction>;
-  fetchTodos?: () => void;
-  deleteTodo?: (todoToUpdate: string) => void;
-  updateTodo?: (tempList: string[]) => void;
-  editTodo?: (item: string, index: number) => void;
-  clearList?: () => void;
-  closeModal?: () => void;
-  closeAlert?: () => void;
-  addTodo?: () => void;
-  emptyTodoArray?: () => void;
+  state: IInitialStateType;
+  dispatch: React.Dispatch<TodolistAction>;
+  fetchTodos: () => void;
+  deleteTodo: (todoToUpdate: string) => void;
+  updateTodo: (tempList: string[]) => void;
+  editTodo: (item: string | ITodoType, index: number) => void;
+  clearList: () => void;
+  closeModal: () => void;
+  closeAlert: () => void;
+  addTodo: () => void;
+  emptyTodoArray: () => void;
 }
 
-export const TodolistContext = createContext<ITodoContext>({
+export const TodolistContext = createContext<Partial<ITodoContext>>({
   state: initialState,
   dispatch: () => undefined,
 });
