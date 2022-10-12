@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 import TodosComponent from '../components/TodosComponent';
-import Register from '../pages/Register';
+import Register from './Register';
 
 const TodoList = () => {
   const { currentUser } = useContext(AuthContext);
