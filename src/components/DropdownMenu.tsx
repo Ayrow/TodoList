@@ -1,10 +1,13 @@
-import { Fragment } from 'react';
 import { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 import { TodolistContext } from '../contexts/TodolistContext';
 
-const DropdownMenu = ({ setIsDropdownOpen }) => {
+interface IProps {
+  setIsDropdownOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const DropdownMenu: React.FC<IProps> = ({ setIsDropdownOpen }: IProps) => {
   const navigate = useNavigate();
   const { currentUser, handleSignout } = useContext(AuthContext);
   const { emptyTodoArray } = useContext(TodolistContext);
@@ -12,6 +15,7 @@ const DropdownMenu = ({ setIsDropdownOpen }) => {
   const logout = () => {
     handleSignout();
     emptyTodoArray();
+    navigate('/');
   };
 
   return (
@@ -24,7 +28,7 @@ const DropdownMenu = ({ setIsDropdownOpen }) => {
         aria-orientation='vertical'
         aria-labelledby='options-menu'>
         {currentUser ? (
-          <Fragment>
+          <>
             <Link
               to='/my-account'
               className='block px-4 py-2 w-full text-center text-md text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-100 dark:hover:text-white dark:hover:bg-gray-600'>
@@ -39,9 +43,9 @@ const DropdownMenu = ({ setIsDropdownOpen }) => {
                 <span>Logout</span>
               </span>
             </button>
-          </Fragment>
+          </>
         ) : (
-          <Fragment>
+          <>
             <Link
               to='/login'
               className='block px-4 py-2 w-full text-center text-md text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-100 dark:hover:text-white dark:hover:bg-gray-600'>
@@ -56,7 +60,7 @@ const DropdownMenu = ({ setIsDropdownOpen }) => {
                 <span>Register</span>
               </span>
             </Link>
-          </Fragment>
+          </>
         )}
       </div>
     </div>

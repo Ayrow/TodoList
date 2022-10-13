@@ -1,12 +1,9 @@
-import { useEffect } from 'react';
-import { useContext } from 'react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { UserContext } from '../contexts/UserContext';
 
 import DropdownMenu from './DropdownMenu';
 
-const Navbar = () => {
+const Navbar: React.FC = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   return (
     <div className=' bg-gray-800 text-white text-xl p-5'>
