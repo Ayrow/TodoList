@@ -1,9 +1,11 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useContext } from 'react';
-import { UserContext } from '../contexts/UserContext';
+import { IUserInitialState, UserContext } from '../contexts/UserContext';
 
 const AlertUser = () => {
   const { closeAlert, ...state } = useContext(UserContext);
+
+  const { alert } = state as IUserInitialState;
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -16,14 +18,13 @@ const AlertUser = () => {
   }, []);
 
   return (
-    <div
-      className={` ${state.alert.color} border-l-4 p-4 relative h-1/4 top-1/4 `}>
+    <div className={` ${alert.color} border-l-4 p-4 relative h-1/4 top-1/4 `}>
       <button onClick={closeAlert} className=' absolute top-0 right-2'>
         Close [X]
       </button>
       <div className='text-center pt-10'>
-        <p className='font-bold'> {state.alert.type} </p>
-        <p> {state.alert.message} </p>
+        <p className='font-bold'> {alert.type} </p>
+        <p> {alert.message} </p>
       </div>
     </div>
   );
