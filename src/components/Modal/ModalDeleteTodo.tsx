@@ -1,8 +1,12 @@
-import React, { useContext } from 'react';
-import { TodolistContext } from '../../contexts/TodolistContext';
+import { useContext } from 'react';
+import {
+  IInitialStateType,
+  TodolistContext,
+} from '../../contexts/TodolistContext';
 
 const ModalDeleteTodo = () => {
   const { closeModal, deleteTodo, ...state } = useContext(TodolistContext);
+  const { todoToUpdate } = state as IInitialStateType;
   return (
     <div className='flex h-full flex-col justify-between'>
       <svg
@@ -17,12 +21,12 @@ const ModalDeleteTodo = () => {
 
       <p className='text-gray-800 text-xl font-bold mt-4'>Remove Todo</p>
       <p className='text-gray-600  text-xs py-2 px-6'>
-        Are you sure you want to delete this Todo: ({state.todoToUpdate}) ?
+        Are you sure you want to delete this Todo: ({todoToUpdate}) ?
       </p>
       <div className='flex items-center justify-between gap-4 w-full mt-8'>
         <button
           type='button'
-          onClick={() => deleteTodo(state.todoToUpdate)}
+          onClick={() => deleteTodo(todoToUpdate)}
           className='py-2 px-4  bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg '>
           Delete
         </button>

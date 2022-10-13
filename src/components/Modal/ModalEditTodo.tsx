@@ -1,15 +1,19 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { useState } from 'react';
-import { TodolistContext } from '../../contexts/TodolistContext';
+import {
+  IInitialStateType,
+  TodolistContext,
+} from '../../contexts/TodolistContext';
 
 const ModalEditTodo = () => {
   const { dispatch, closeModal, deleteTodo, updateTodo, ...state } =
     useContext(TodolistContext);
+  const { todoArray, editID, todoToUpdate } = state as IInitialStateType;
   const [todoUpdated, setTodoUpdated] = useState('');
 
   const pushNewTodo = async () => {
-    const tempList = state.todoArray.map((item, index) => {
-      if (index === state.editID) {
+    const tempList = todoArray.map((item, index) => {
+      if (index === Number(editID)) {
         return todoUpdated;
       }
       return item;
@@ -35,11 +39,11 @@ const ModalEditTodo = () => {
 
       <p className='text-gray-800 text-xl font-bold mt-4'>Edit Todo</p>
       <p className='text-gray-600  text-xs py-2 px-6'>
-        Are you sure you want to edit this Todo : ({state.todoToUpdate}) ?
+        Are you sure you want to edit this Todo : ({todoToUpdate}) ?
       </p>
       <input
         type='text'
-        placeholder={state.todoToUpdate}
+        placeholder={todoToUpdate}
         onChange={(e) => setTodoUpdated(e.target.value)}
       />
 
