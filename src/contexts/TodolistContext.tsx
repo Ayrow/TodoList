@@ -16,9 +16,9 @@ interface ITodolistContextProviderProps {
   children: React.ReactNode;
 }
 
-interface ITodoType {
-  todo: string;
-}
+// interface ITodoType {
+//   todo: string;
+// }
 
 export interface IInitialStateType {
   loading: boolean;
@@ -26,7 +26,7 @@ export interface IInitialStateType {
   todoToUpdate: string;
   editID: null | string;
   isEditing: boolean;
-  todoArray: ITodoType[];
+  todoArray: string[];
   isModalOpen: boolean;
   alert: {
     open: boolean;
@@ -63,7 +63,7 @@ export type TodolistAction =
     }
   | {
       type: 'FETCH_TODOS' | 'CONFIRM_DELETE' | 'SET_TODO';
-      payload: string | ITodoType;
+      payload: string;
     }
   | { type: 'EDIT_TODO'; payload: { item: string; index: number } };
 
@@ -73,7 +73,7 @@ interface ITodoContext {
   fetchTodos: () => void;
   deleteTodo: (todoToUpdate: string) => void;
   updateTodo: (tempList: string[]) => void;
-  editTodo: (item: string | ITodoType, index: number) => void;
+  editTodo: (item: string, index: number) => void;
   clearList: () => void;
   closeModal: () => void;
   closeAlert: () => void;

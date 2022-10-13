@@ -6,7 +6,7 @@ import {
 import AlertTodo from './AlertTodo';
 import ModalTodolist from './Modal/ModalTodolist';
 
-const TodosComponent = () => {
+const TodosComponent: React.FC = () => {
   const {
     dispatch,
     fetchTodos,
@@ -66,12 +66,12 @@ const TodosComponent = () => {
                 Add Todo
               </button>
             </div>
-            {todoArray.length > 0 && (
+            {todoArray?.length > 0 && (
               <div className='flex flex-col place-items-center'>
                 {todoArray?.map((item, index) => {
                   return (
                     <div key={index} className=' w-full mt-4  '>
-                      <div className=' capitalize grid grid-cols-3 py-2 px-4 bg-slate-200 text-black w-full text-center text-lg font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg '>
+                      <div className='capitalize grid grid-cols-3 py-2 px-4 bg-slate-200 text-black w-full text-center text-lg font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg'>
                         {item}
                         <button
                           type='button'
