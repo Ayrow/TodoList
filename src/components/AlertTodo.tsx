@@ -1,8 +1,13 @@
-import React, { useContext, useEffect } from 'react';
-import { TodolistContext } from '../contexts/TodolistContext';
+import { useContext, useEffect } from 'react';
+import {
+  IInitialStateType,
+  TodolistContext,
+} from '../contexts/TodolistContext';
 
 const AlertTodo = () => {
   const { closeAlert, ...state } = useContext(TodolistContext);
+
+  const { alert } = state as IInitialStateType;
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -12,11 +17,11 @@ const AlertTodo = () => {
     return () => {
       clearTimeout(timeout);
     };
-  }, [state.alert]);
+  }, [alert]);
 
   return (
-    <div className={`text-center ${state.alert.type} rounded-md`}>
-      {state.alert.message}
+    <div className={`text-center ${alert.type} rounded-md`}>
+      {alert.message}
     </div>
   );
 };
