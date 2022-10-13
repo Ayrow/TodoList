@@ -92,9 +92,7 @@ export const UserContext = createContext<Partial<IUserContext>>({
   dispatch: () => undefined,
 });
 
-export const UserProvider: React.FC = ({
-  children,
-}: IUserContextProviderProps) => {
+export const UserProvider = ({ children }: IUserContextProviderProps) => {
   const { currentUser } = useContext(AuthContext);
   const { fetchTodos } = useContext(TodolistContext);
 

@@ -86,7 +86,7 @@ export const TodolistContext = createContext<Partial<ITodoContext>>({
   dispatch: () => undefined,
 });
 
-export const TodolistProvider: React.FC = ({
+export const TodolistProvider = ({
   children,
 }: ITodolistContextProviderProps) => {
   const { currentUser } = useContext(AuthContext);
