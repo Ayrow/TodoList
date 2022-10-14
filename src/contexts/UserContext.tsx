@@ -87,14 +87,13 @@ interface IUserContext {
   setIsModalReAuthOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const UserContext = createContext<Partial<IUserContext>>({
-  state: initialState,
-  dispatch: () => undefined,
-});
+const { currentUser } = useContext<any>(AuthContext);
+
+export const UserContext = createContext<IUserContext | undefined>(undefined);
 
 export const UserProvider = ({ children }: IUserContextProviderProps) => {
-  const { currentUser } = useContext(AuthContext);
-  const { fetchTodos } = useContext(TodolistContext);
+  const { fetchTodos } = useContext<any>(TodolistContext);
+  const { currentUser } = auth;
 
   const [state, dispatch] = useReducer(UserReducer, initialState);
 
@@ -108,10 +107,12 @@ export const UserProvider = ({ children }: IUserContextProviderProps) => {
     createUserWithEmailAndPassword(auth, state.email, state.password)
       .then((userCredential) => {
         const addUserToDb = async () => {
-          await setDoc(doc(db, 'users', auth.currentUser.uid), {
-            username: state.username,
-            email: state.email,
-          });
+          if (currentUser) {
+            await setDoc(doc(db, 'users', currentUser.uid), {
+              username: state.username,
+              email: state.email,
+            });
+          }
         };
 
         addUserToDb();
@@ -175,10 +176,12 @@ export const UserProvider = ({ children }: IUserContextProviderProps) => {
   // };
 
   const fetchUserInfo = async () => {
-    const docRef = doc(db, 'users', currentUser.uid);
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      setUser(docSnap.data() as IUser);
+    if (currentUser) {
+      const docRef = doc(db, 'users', currentUser.uid);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        setUser(docSnap.data() as IUser);
+      }
     } else {
       // doc.data() will be undefined in this case
       console.log('No such document!');
@@ -190,27 +193,29 @@ export const UserProvider = ({ children }: IUserContextProviderProps) => {
       setIsModalReAuthOpen(false);
       dispatch({ type: 'PASSWORD_ALREADY_USED' });
     } else {
-      const credential = EmailAuthProvider.credential(
-        currentUser.email,
-        password
-      );
-
-      await reauthenticateWithCredential(auth.currentUser, credential);
+      if (currentUser) {
+        const credential = EmailAuthProvider.credential(
+          currentUser.email,
+          password
+        );
+        await reauthenticateWithCredential(currentUser, credential);
+        await updatePassword(currentUser, state.newPassword)
+          .then(() => {
+            dispatch({ type: 'UPDATED_PASSWORD' });
+            setIsModalReAuthOpen(false);
+            alert('password updated');
+            // Update successful.
+          })
+          .catch((error) => {
+            // An error ocurred
+            console.log(error);
+            alert(error.message);
+            // ...
+          });
+      }
 
       // Pass result.user here
-      await updatePassword(currentUser, state.newPassword)
-        .then(() => {
-          dispatch({ type: 'UPDATED_PASSWORD' });
-          setIsModalReAuthOpen(false);
-          alert('password updated');
-          // Update successful.
-        })
-        .catch((error) => {
-          // An error ocurred
-          console.log(error);
-          alert(error.message);
-          // ...
-        });
+
       dispatch({ type: 'EMPTY_FORMS' });
       console.log('success in updating');
     }
@@ -296,3 +301,11 @@ export const UserProvider = ({ children }: IUserContextProviderProps) => {
     </UserContext.Provider>
   );
 };
+
+export function useUserContext() {
+  const context = useContext(UserContext);
+  if (context === undefined) {
+    throw new Error('useCount must be used within a CountProvider');
+  }
+  return context;
+}

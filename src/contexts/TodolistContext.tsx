@@ -85,12 +85,9 @@ interface ITodoContext {
   emptyTodoArray: () => void;
 }
 
-export const TodolistContext = createContext<Partial<ITodoContext | null>>({
-  state: initialState,
-  dispatch: () => {},
-});
-
-// export const TodolistContext = createContext(initialState);
+export const TodolistContext = createContext<ITodoContext | undefined>(
+  undefined
+);
 
 export const TodolistProvider = ({
   children,
@@ -171,7 +168,7 @@ export const TodolistProvider = ({
   return (
     <TodolistContext.Provider
       value={{
-        ...state,
+        state,
         dispatch,
         fetchTodos,
         addTodo,
@@ -187,3 +184,11 @@ export const TodolistProvider = ({
     </TodolistContext.Provider>
   );
 };
+
+export function useTodoContext() {
+  const context = useContext(TodolistContext);
+  if (context === undefined) {
+    throw new Error('useCount must be used within a CountProvider');
+  }
+  return context;
+}

@@ -7,11 +7,13 @@ interface IAuthContextProviderProps {
 }
 
 export interface IUserContextType {
-  currentUser: User | null;
+  currentUser?: User;
   handleSignout: () => void;
 }
 
-export const AuthContext = createContext<IUserContextType | null>(null);
+export const AuthContext = createContext<IUserContextType | undefined>(
+  undefined
+);
 
 export const AuthProvider = ({ children }: IAuthContextProviderProps) => {
   const [currentUser, setCurrentUser] = useState<any>(null);
