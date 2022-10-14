@@ -24,7 +24,7 @@ export interface IInitialStateType {
   loading: boolean;
   todo: string;
   todoToUpdate: string;
-  editID: null | string;
+  editID: null | number;
   isEditing: boolean;
   todoArray: string[];
   isModalOpen: boolean;
@@ -62,7 +62,11 @@ export type TodolistAction =
         | 'EMPTY_TODO_ARRAY';
     }
   | {
-      type: 'FETCH_TODOS' | 'CONFIRM_DELETE' | 'SET_TODO';
+      type: 'FETCH_TODOS';
+      payload: string[];
+    }
+  | {
+      type: 'CONFIRM_DELETE' | 'SET_TODO';
       payload: string;
     }
   | { type: 'EDIT_TODO'; payload: { item: string; index: number } };
@@ -70,21 +74,25 @@ export type TodolistAction =
 interface ITodoContext {
   state: IInitialStateType;
   dispatch: React.Dispatch<TodolistAction>;
-  fetchTodos: () => void;
-  deleteTodo: (todoToUpdate: string) => void;
-  updateTodo: (tempList: string[]) => void;
-  editTodo: (item: string, index: number) => void;
-  clearList: () => void;
-  closeModal: () => void;
-  closeAlert: () => void;
-  addTodo: () => void;
-  emptyTodoArray: () => void;
+  // fetchTodos: () => void;
+  // deleteTodo: (todoToUpdate: string) => void;
+  // updateTodo: (tempList: string[]) => void;
+  // editTodo: (item: string, index: number) => void;
+  // clearList: () => void;
+  // closeModal: () => void;
+  // closeAlert: () => void;
+  // addTodo: () => void;
+  // emptyTodoArray: () => void;
 }
 
-export const TodolistContext = createContext<Partial<ITodoContext>>({
-  state: initialState,
-  dispatch: () => undefined,
-});
+// export const TodolistContext = createContext<Partial<ITodoContext | null>>(
+//   {
+//   state: initialState,
+//   dispatch: () => undefined,
+// }
+// );
+
+export const TodolistContext = createContext(initialState);
 
 export const TodolistProvider = ({
   children,

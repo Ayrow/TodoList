@@ -3,7 +3,7 @@ import { IInitialStateType, TodolistAction } from '../contexts/TodolistContext';
 export const TodolistReducer = (
   state: IInitialStateType,
   action: TodolistAction
-) => {
+): IInitialStateType => {
   switch (action.type) {
     case 'FETCH_TODOS':
       return {
