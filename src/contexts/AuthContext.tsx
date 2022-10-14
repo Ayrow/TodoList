@@ -11,10 +11,10 @@ export interface IUserContextType {
   handleSignout: () => void;
 }
 
-export const AuthContext = createContext<IUserContextType>(null);
+export const AuthContext = createContext<IUserContextType | null>(null);
 
 export const AuthProvider = ({ children }: IAuthContextProviderProps) => {
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [currentUser, setCurrentUser] = useState<any>(null);
 
   const handleSignout = () => {
     signOut(auth)

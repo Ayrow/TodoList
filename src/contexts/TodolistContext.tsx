@@ -74,30 +74,28 @@ export type TodolistAction =
 interface ITodoContext {
   state: IInitialStateType;
   dispatch: React.Dispatch<TodolistAction>;
-  // fetchTodos: () => void;
-  // deleteTodo: (todoToUpdate: string) => void;
-  // updateTodo: (tempList: string[]) => void;
-  // editTodo: (item: string, index: number) => void;
-  // clearList: () => void;
-  // closeModal: () => void;
-  // closeAlert: () => void;
-  // addTodo: () => void;
-  // emptyTodoArray: () => void;
+  fetchTodos: () => void;
+  deleteTodo: (todoToUpdate: string) => void;
+  updateTodo: (tempList: string[]) => void;
+  editTodo: (item: string, index: number) => void;
+  clearList: () => void;
+  closeModal: () => void;
+  closeAlert: () => void;
+  addTodo: () => void;
+  emptyTodoArray: () => void;
 }
 
-// export const TodolistContext = createContext<Partial<ITodoContext | null>>(
-//   {
-//   state: initialState,
-//   dispatch: () => undefined,
-// }
-// );
+export const TodolistContext = createContext<Partial<ITodoContext | null>>({
+  state: initialState,
+  dispatch: () => {},
+});
 
-export const TodolistContext = createContext(initialState);
+// export const TodolistContext = createContext(initialState);
 
 export const TodolistProvider = ({
   children,
 }: ITodolistContextProviderProps) => {
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser } = useContext<any>(AuthContext);
   const [state, dispatch] = useReducer(TodolistReducer, initialState);
 
   const fetchTodos = async () => {
@@ -141,10 +139,14 @@ export const TodolistProvider = ({
   };
 
   const updateTodo = async (tempList: string[]) => {
-    const todoRef = doc(db, 'todos', auth.currentUser.uid);
-    await updateDoc(todoRef, {
-      todos: tempList,
-    });
+    const { currentUser } = auth;
+    if (currentUser) {
+      const todoRef = doc(db, 'todos', currentUser.uid);
+      await updateDoc(todoRef, {
+        todos: tempList,
+      });
+    }
+
     dispatch({ type: 'UPDATE_EDIT_TODO' });
   };
 
