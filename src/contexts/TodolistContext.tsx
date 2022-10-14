@@ -10,7 +10,7 @@ import {
 import { createContext, useContext, useReducer } from 'react';
 import { TodolistReducer } from '../reducers/Todolist.reducer';
 import { auth, db } from '../utils/firebase-config';
-import { AuthContext } from './AuthContext';
+import { useAuthContext } from './AuthContext';
 
 interface ITodolistContextProviderProps {
   children: React.ReactNode;
@@ -92,7 +92,7 @@ export const TodolistContext = createContext<ITodoContext | undefined>(
 export const TodolistProvider = ({
   children,
 }: ITodolistContextProviderProps) => {
-  const { currentUser } = useContext<any>(AuthContext);
+  const { currentUser } = useAuthContext();
   const [state, dispatch] = useReducer(TodolistReducer, initialState);
 
   const fetchTodos = async () => {
@@ -185,7 +185,7 @@ export const TodolistProvider = ({
   );
 };
 
-export function useTodoContext() {
+export function useTodolistContext() {
   const context = useContext(TodolistContext);
   if (context === undefined) {
     throw new Error('useCount must be used within a CountProvider');

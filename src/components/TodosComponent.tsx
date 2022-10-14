@@ -1,5 +1,8 @@
 import { useContext, useEffect } from 'react';
-import { IInitialStateType, useTodoContext } from '../contexts/TodolistContext';
+import {
+  IInitialStateType,
+  useTodolistContext,
+} from '../contexts/TodolistContext';
 import AlertTodo from './AlertTodo';
 import ModalTodolist from './Modal/ModalTodolist';
 
@@ -13,7 +16,7 @@ const TodosComponent: React.FC = () => {
     editTodo,
     clearList,
     state,
-  } = useTodoContext();
+  } = useTodolistContext();
 
   const { todo, todoArray, isModalOpen, alert } = state as IInitialStateType;
 
