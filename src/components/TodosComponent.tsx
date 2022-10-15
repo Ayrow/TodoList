@@ -1,4 +1,5 @@
-import { useContext, useEffect } from 'react';
+import React from 'react';
+import { useEffect } from 'react';
 import {
   IInitialStateType,
   useTodolistContext,
@@ -11,8 +12,6 @@ const TodosComponent: React.FC = () => {
     dispatch,
     fetchTodos,
     addTodo,
-    deleteTodo,
-    updateTodo,
     editTodo,
     clearList,
     state,
@@ -66,9 +65,9 @@ const TodosComponent: React.FC = () => {
                 Add Todo
               </button>
             </div>
-            {todoArray?.length > 0 && (
+            {todoArray.length > 0 && (
               <div className='flex flex-col place-items-center'>
-                {todoArray?.map((item, index) => {
+                {todoArray.map((item, index) => {
                   return (
                     <div key={index} className=' w-full mt-4  '>
                       <div className='capitalize grid grid-cols-3 py-2 px-4 bg-slate-200 text-black w-full text-center text-lg font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg'>

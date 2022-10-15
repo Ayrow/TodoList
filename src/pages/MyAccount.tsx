@@ -1,17 +1,27 @@
-import { useContext, useEffect, useState } from 'react';
+import React from 'react';
+import { useEffect, useState } from 'react';
 import EmptyProfile from '../assets/no-profile-picture.svg';
-import { UserContext, IUserInitialState } from '../contexts/UserContext';
+import { IUserInitialState, useUserContext } from '../contexts/UserContext';
 import ModalReAuth from '../components/Modal/ModalReAuth';
 import AlertUser from '../components/AlertUser';
 
 const MyAccount: React.FC = () => {
-  const { user, fetchUserInfo } = useContext(UserContext);
+  const {
+    dispatch,
+    isModalReAuthOpen,
+    setIsModalReAuthOpen,
+    user,
+    fetchUserInfo,
+    state,
+  } = useUserContext();
 
-  const { dispatch, isModalReAuthOpen, setIsModalReAuthOpen, ...state } =
-    useContext(UserContext);
-
-  const { username, newPassword, phoneNumber, email, alert } =
-    state as IUserInitialState;
+  const {
+    username,
+    newPassword,
+    phoneNumber,
+    email,
+    alert,
+  } = state as IUserInitialState;
 
   const [showPassword, setShowPassword] = useState(false);
 

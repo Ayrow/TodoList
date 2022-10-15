@@ -1,7 +1,7 @@
-import { useContext } from 'react';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { AuthContext } from '../contexts/AuthContext';
-import { TodolistContext } from '../contexts/TodolistContext';
+import { useAuthContext } from '../contexts/AuthContext';
+import { useTodolistContext } from '../contexts/TodolistContext';
 
 interface IProps {
   setIsDropdownOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -9,8 +9,8 @@ interface IProps {
 
 const DropdownMenu: React.FC<IProps> = ({ setIsDropdownOpen }: IProps) => {
   const navigate = useNavigate();
-  const { currentUser, handleSignout } = useContext(AuthContext);
-  const { emptyTodoArray } = useContext(TodolistContext);
+  const { currentUser, handleSignout } = useAuthContext();
+  const { emptyTodoArray } = useTodolistContext();
 
   const logout = () => {
     handleSignout();

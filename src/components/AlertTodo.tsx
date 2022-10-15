@@ -1,11 +1,12 @@
-import { useContext, useEffect } from 'react';
+import React from 'react';
+import { useEffect } from 'react';
 import {
   IInitialStateType,
-  TodolistContext,
+  useTodolistContext,
 } from '../contexts/TodolistContext';
 
 const AlertTodo = () => {
-  const { closeAlert, ...state } = useContext(TodolistContext);
+  const { closeAlert, state } = useTodolistContext();
 
   const { alert } = state as IInitialStateType;
 

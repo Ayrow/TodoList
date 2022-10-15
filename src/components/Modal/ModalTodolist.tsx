@@ -1,13 +1,13 @@
-import { useContext } from 'react';
+import React from 'react';
 import {
   IInitialStateType,
-  TodolistContext,
+  useTodolistContext,
 } from '../../contexts/TodolistContext';
 import ModalDeleteTodo from './ModalDeleteTodo';
 import ModalEditTodo from './ModalEditTodo';
 
 const ModalTodolist = () => {
-  const { closeModal, deleteTodo, ...state } = useContext(TodolistContext);
+  const { state } = useTodolistContext();
   const { isEditing } = state as IInitialStateType;
   return (
     <div className='shadow-lg rounded-2xl p-4 bg-white w-64 mx-auto mt-24 mb-56'>

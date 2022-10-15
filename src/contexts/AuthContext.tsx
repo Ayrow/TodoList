@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { onAuthStateChanged, signOut, User } from 'firebase/auth';
 import { createContext, useEffect, useState, useContext } from 'react';
 import { auth } from '../utils/firebase-config';
@@ -44,7 +45,7 @@ export const AuthProvider = ({ children }: IAuthContextProviderProps) => {
 export function useAuthContext() {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useCount must be used within a CountProvider');
+    throw new Error('useAuthContext must be used within a AuthProvider');
   }
   return context;
 }

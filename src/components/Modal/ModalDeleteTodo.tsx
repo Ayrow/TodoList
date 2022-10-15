@@ -1,11 +1,11 @@
-import { useContext } from 'react';
+import React from 'react';
 import {
   IInitialStateType,
-  TodolistContext,
+  useTodolistContext,
 } from '../../contexts/TodolistContext';
 
 const ModalDeleteTodo = () => {
-  const { closeModal, deleteTodo, ...state } = useContext(TodolistContext);
+  const { closeModal, deleteTodo, state } = useTodolistContext();
   const { todoToUpdate } = state as IInitialStateType;
   return (
     <div className='flex h-full flex-col justify-between'>

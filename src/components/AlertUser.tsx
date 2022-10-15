@@ -1,9 +1,9 @@
+import React from 'react';
 import { useEffect } from 'react';
-import { useContext } from 'react';
-import { IUserInitialState, UserContext } from '../contexts/UserContext';
+import { IUserInitialState, useUserContext } from '../contexts/UserContext';
 
 const AlertUser = () => {
-  const { closeAlert, ...state } = useContext(UserContext);
+  const { closeAlert, state } = useUserContext();
 
   const { alert } = state as IUserInitialState;
 

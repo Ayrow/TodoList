@@ -13,11 +13,11 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <AuthProvider>
-      <UserProvider>
-        <TodolistProvider>
+      <TodolistProvider>
+        <UserProvider>
           <App />
-        </TodolistProvider>
-      </UserProvider>
+        </UserProvider>
+      </TodolistProvider>
     </AuthProvider>
   </React.StrictMode>
 );

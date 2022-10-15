@@ -1,13 +1,12 @@
-import { useContext } from 'react';
+import React from 'react';
 import { useState } from 'react';
 import {
   IInitialStateType,
-  TodolistContext,
+  useTodolistContext,
 } from '../../contexts/TodolistContext';
 
 const ModalEditTodo = () => {
-  const { dispatch, closeModal, deleteTodo, updateTodo, ...state } =
-    useContext(TodolistContext);
+  const { dispatch, closeModal, updateTodo, state } = useTodolistContext();
   const { todoArray, editID, todoToUpdate } = state as IInitialStateType;
   const [todoUpdated, setTodoUpdated] = useState('');
 

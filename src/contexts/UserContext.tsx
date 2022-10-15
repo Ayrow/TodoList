@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { User } from 'firebase/auth';
 import {
   createUserWithEmailAndPassword,
@@ -85,7 +86,7 @@ interface IUser {
 
 interface IUserContext {
   state: IUserInitialState;
-  user: IUser | null;
+  user: IUser;
   dispatch: React.Dispatch<UserAction>;
   createUser: () => void;
   loginUserWithEmailAndPassword: () => void;
@@ -228,93 +229,93 @@ export const UserProvider = ({ children }: IUserContextProviderProps) => {
         console.log('success in updating');
       }
     }
-
-    const updateAccount = async (password: string) => {
-      const credential = EmailAuthProvider.credential(
-        currentUser.email as string,
-        password
-      );
-
-      await reauthenticateWithCredential(auth.currentUser as User, credential);
-      const userRef = doc(db, 'users', currentUser.uid);
-
-      if (state.email) {
-        await updateEmail(auth.currentUser as User, state.email)
-          .then(() => {
-            // const userRef = doc(db, 'users', currentUser);
-            updateDoc(userRef, {
-              email: state.email,
-            });
-          })
-          .catch((error) => {
-            console.log('error', error);
-            // An error occurred
-            // ...
-          });
-      }
-      if (state.phoneNumber) {
-        await updateDoc(userRef, {
-          phoneNumber: state.phoneNumber,
-        });
-      }
-      if (state.username) {
-        await updateDoc(userRef, {
-          username: state.username,
-        });
-      }
-      setIsModalReAuthOpen(false);
-      dispatch({ type: 'ALERT_UPDATED_ACCOUNT' });
-      fetchUserInfo();
-    };
-
-    const deleteAccount = async (password: string) => {
-      const credential = EmailAuthProvider.credential(
-        currentUser.email as string,
-        password
-      );
-
-      const result = await reauthenticateWithCredential(
-        auth.currentUser as User,
-        credential
-      );
-
-      // Pass result.user here
-      await deleteDoc(doc(db, 'users', currentUser.uid));
-      await deleteDoc(doc(db, 'todos', currentUser.uid));
-      await deleteUser(result.user);
-      console.log('success in deleting your account');
-    };
-
-    const closeAlert = () => {
-      dispatch({ type: 'CLOSE_ALERT' });
-    };
-
-    return (
-      <UserContext.Provider
-        value={{
-          state,
-          dispatch,
-          createUser,
-          loginUserWithEmailAndPassword,
-          fetchUserInfo,
-          user,
-          updateAccount,
-          deleteAccount,
-          changePassword,
-          isModalReAuthOpen,
-          closeAlert,
-          setIsModalReAuthOpen,
-        }}>
-        {children}
-      </UserContext.Provider>
-    );
   };
+
+  const updateAccount = async (password: string) => {
+    const credential = EmailAuthProvider.credential(
+      currentUser.email as string,
+      password
+    );
+
+    await reauthenticateWithCredential(auth.currentUser as User, credential);
+    const userRef = doc(db, 'users', currentUser.uid);
+
+    if (state.email) {
+      await updateEmail(auth.currentUser as User, state.email)
+        .then(() => {
+          // const userRef = doc(db, 'users', currentUser);
+          updateDoc(userRef, {
+            email: state.email,
+          });
+        })
+        .catch((error) => {
+          console.log('error', error);
+          // An error occurred
+          // ...
+        });
+    }
+    if (state.phoneNumber) {
+      await updateDoc(userRef, {
+        phoneNumber: state.phoneNumber,
+      });
+    }
+    if (state.username) {
+      await updateDoc(userRef, {
+        username: state.username,
+      });
+    }
+    setIsModalReAuthOpen(false);
+    dispatch({ type: 'ALERT_UPDATED_ACCOUNT' });
+    fetchUserInfo();
+  };
+
+  const deleteAccount = async (password: string) => {
+    const credential = EmailAuthProvider.credential(
+      currentUser.email as string,
+      password
+    );
+
+    const result = await reauthenticateWithCredential(
+      auth.currentUser as User,
+      credential
+    );
+
+    // Pass result.user here
+    await deleteDoc(doc(db, 'users', currentUser.uid));
+    await deleteDoc(doc(db, 'todos', currentUser.uid));
+    await deleteUser(result.user);
+    console.log('success in deleting your account');
+  };
+
+  const closeAlert = () => {
+    dispatch({ type: 'CLOSE_ALERT' });
+  };
+
+  return (
+    <UserContext.Provider
+      value={{
+        state,
+        dispatch,
+        createUser,
+        loginUserWithEmailAndPassword,
+        fetchUserInfo,
+        user,
+        updateAccount,
+        deleteAccount,
+        changePassword,
+        isModalReAuthOpen,
+        closeAlert,
+        setIsModalReAuthOpen,
+      }}>
+      {children}
+    </UserContext.Provider>
+  );
 };
 
 export function useUserContext() {
   const context = useContext(UserContext);
   if (context === undefined) {
-    throw new Error('useCount must be used within a CountProvider');
+    throw new Error('useUserContext must be used within a UserProvider');
   }
   return context;
 }

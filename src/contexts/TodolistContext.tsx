@@ -1,3 +1,5 @@
+import * as React from 'react';
+
 import {
   arrayRemove,
   arrayUnion,
@@ -7,13 +9,13 @@ import {
   setDoc,
   updateDoc,
 } from 'firebase/firestore';
-import { createContext, useContext, useReducer } from 'react';
+import { createContext, ReactNode, useContext, useReducer } from 'react';
 import { TodolistReducer } from '../reducers/Todolist.reducer';
 import { auth, db } from '../utils/firebase-config';
 import { useAuthContext } from './AuthContext';
 
 interface ITodolistContextProviderProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 // interface ITodoType {
@@ -188,7 +190,9 @@ export const TodolistProvider = ({
 export function useTodolistContext() {
   const context = useContext(TodolistContext);
   if (context === undefined) {
-    throw new Error('useCount must be used within a CountProvider');
+    throw new Error(
+      'useTodolistContext must be used within a TodolistProvider'
+    );
   }
   return context;
 }

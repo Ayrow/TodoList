@@ -1,9 +1,10 @@
+import React from 'react';
 import { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { UserContext } from '../contexts/UserContext';
+import { useUserContext } from '../contexts/UserContext';
 
 const Login: React.FC = () => {
-  const { dispatch, loginUserWithEmailAndPassword } = useContext(UserContext);
+  const { dispatch, loginUserWithEmailAndPassword } = useUserContext();
   const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);

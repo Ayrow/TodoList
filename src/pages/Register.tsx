@@ -1,12 +1,13 @@
-import { useContext, useState } from 'react';
+import React from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { IUserInitialState, UserContext } from '../contexts/UserContext';
+import { IUserInitialState, useUserContext } from '../contexts/UserContext';
 import { Link } from 'react-router-dom';
 import AlertUser from '../components/AlertUser';
 
 const Register = () => {
   const navigate = useNavigate();
-  const { dispatch, createUser, ...state } = useContext(UserContext);
+  const { dispatch, createUser, state } = useUserContext();
 
   const { password, confirmPassword, alert } = state as IUserInitialState;
 
@@ -26,7 +27,7 @@ const Register = () => {
   return (
     <div className='flex justify-center pt-5 relative'>
       {alert.isOpen && (
-        <div className=' fixed flex w-full h-full bg-white bg-opacity-80 z-50 place-content-center'>
+        <div className='fixed flex w-full h-full bg-white bg-opacity-80 z-50 place-content-center'>
           <AlertUser />
         </div>
       )}
