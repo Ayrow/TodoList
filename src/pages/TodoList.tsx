@@ -1,4 +1,3 @@
-import React from 'react';
 import { useAuthContext } from '../contexts/AuthContext';
 import TodosComponent from '../components/TodosComponent';
 import Register from './Register';

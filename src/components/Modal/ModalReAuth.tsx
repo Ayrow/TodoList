@@ -1,4 +1,3 @@
-import React from 'react';
 import { useState } from 'react';
 import { IUserInitialState, useUserContext } from '../../contexts/UserContext';
 
@@ -13,12 +12,8 @@ const ModalReAuth = () => {
   } = useUserContext();
   const [showPassword, setShowPassword] = useState(false);
 
-  const {
-    isDeleting,
-    isUpdatingPassword,
-    isUpdatingUserInfo,
-    password,
-  } = state as IUserInitialState;
+  const { isDeleting, isUpdatingPassword, isUpdatingUserInfo, password } =
+    state as IUserInitialState;
 
   return (
     <div className='shadow-lg rounded-2xl p-4 bg-white w-96 text-center mx-auto mt-24 mb-auto'>

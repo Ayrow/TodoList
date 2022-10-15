@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { User } from 'firebase/auth';
 import {
   createUserWithEmailAndPassword,

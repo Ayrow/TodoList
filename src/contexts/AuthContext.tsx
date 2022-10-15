@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { onAuthStateChanged, signOut, User } from 'firebase/auth';
 import { createContext, useEffect, useState, useContext } from 'react';
 import { auth } from '../utils/firebase-config';

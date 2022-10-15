@@ -1,4 +1,3 @@
-import React from 'react';
 import { useEffect } from 'react';
 import {
   IInitialStateType,
@@ -8,14 +7,8 @@ import AlertTodo from './AlertTodo';
 import ModalTodolist from './Modal/ModalTodolist';
 
 const TodosComponent: React.FC = () => {
-  const {
-    dispatch,
-    fetchTodos,
-    addTodo,
-    editTodo,
-    clearList,
-    state,
-  } = useTodolistContext();
+  const { dispatch, fetchTodos, addTodo, editTodo, clearList, state } =
+    useTodolistContext();
 
   const { todo, todoArray, isModalOpen, alert } = state as IInitialStateType;
 

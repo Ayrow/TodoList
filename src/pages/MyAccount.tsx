@@ -1,4 +1,3 @@
-import React from 'react';
 import { useEffect, useState } from 'react';
 import EmptyProfile from '../assets/no-profile-picture.svg';
 import { IUserInitialState, useUserContext } from '../contexts/UserContext';
@@ -15,13 +14,8 @@ const MyAccount: React.FC = () => {
     state,
   } = useUserContext();
 
-  const {
-    username,
-    newPassword,
-    phoneNumber,
-    email,
-    alert,
-  } = state as IUserInitialState;
+  const { username, newPassword, phoneNumber, email, alert } =
+    state as IUserInitialState;
 
   const [showPassword, setShowPassword] = useState(false);
 
