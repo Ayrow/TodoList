@@ -131,6 +131,17 @@ export const TodolistReducer = (
           type: '',
         },
       };
+
+    case 'TODO_ALREADY_EXISTS':
+      return {
+        ...state,
+        alert: {
+          ...alert,
+          open: true,
+          message: 'Error! This todo is already in the list',
+          type: 'bg-red-500 text-white',
+        },
+      };
     default:
       return state;
   }

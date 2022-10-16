@@ -61,7 +61,8 @@ export type TodolistAction =
         | 'CLEARED_LIST'
         | 'EMPTY_TODO_ARRAY'
         | 'CLOSE_MODAL'
-        | 'CLOSE_ALERT';
+        | 'CLOSE_ALERT'
+        | 'TODO_ALREADY_EXISTS';
     }
   | {
       type: 'FETCH_TODOS';
@@ -115,10 +116,17 @@ export const TodolistProvider = ({
       const todosRef = doc(db, 'todos', currentUser.uid);
       const docSnap = await getDoc(todosRef);
       if (docSnap.exists()) {
-        await updateDoc(todosRef, {
-          todos: arrayUnion(state.todo),
-        });
-        dispatch({ type: 'ADDING_TODO' });
+        const checkIfDuplicate = docSnap
+          .data()
+          .todos.find((item: string) => item === state.todo);
+        if (checkIfDuplicate === state.todo) {
+          dispatch({ type: 'TODO_ALREADY_EXISTS' });
+        } else {
+          await updateDoc(todosRef, {
+            todos: arrayUnion(state.todo),
+          });
+          dispatch({ type: 'ADDING_TODO' });
+        }
       } else {
         await setDoc(todosRef, {
           todos: [state.todo],
@@ -149,6 +157,7 @@ export const TodolistProvider = ({
     const { currentUser } = auth;
     if (currentUser) {
       const todoRef = doc(db, 'todos', currentUser.uid);
+      console.log('state.todo', state.todo);
       await updateDoc(todoRef, {
         todos: tempList,
       });
