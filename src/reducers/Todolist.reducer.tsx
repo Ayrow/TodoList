@@ -121,6 +121,16 @@ export const TodolistReducer = (
         isModalOpen: false,
         isEditing: false,
       };
+    case 'CLOSE_ALERT':
+      return {
+        ...state,
+        alert: {
+          ...alert,
+          open: false,
+          message: '',
+          type: '',
+        },
+      };
     default:
       return state;
   }

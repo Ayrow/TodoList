@@ -60,7 +60,8 @@ export type TodolistAction =
         | 'UPDATE_EDIT_TODO'
         | 'CLEARED_LIST'
         | 'EMPTY_TODO_ARRAY'
-        | 'CLOSE_MODAL';
+        | 'CLOSE_MODAL'
+        | 'CLOSE_ALERT';
     }
   | {
       type: 'FETCH_TODOS';
@@ -136,10 +137,12 @@ export const TodolistProvider = ({
       });
       dispatch({ type: 'DELETE_TODO' });
     }
+    fetchTodos();
   };
 
   const editTodo = (item: string, index: number) => {
     dispatch({ type: 'EDIT_TODO', payload: { item, index } });
+    closeAlert();
   };
 
   const updateTodo = async (tempList: string[]) => {
@@ -170,7 +173,7 @@ export const TodolistProvider = ({
   };
 
   const closeAlert = () => {
-    state.alert.open = false;
+    dispatch({ type: 'CLOSE_ALERT' });
   };
 
   return (
