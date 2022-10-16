@@ -140,6 +140,7 @@ export const UserProvider = ({ children }: IUserContextProviderProps) => {
     signInWithEmailAndPassword(auth, state.email, state.password)
       .then((user) => {
         fetchTodos();
+        dispatch({ type: 'EMPTY_FORMS' });
       })
       .catch((error) => {
         console.log(error);
@@ -147,8 +148,6 @@ export const UserProvider = ({ children }: IUserContextProviderProps) => {
           alert('Wrong credentials');
         }
       });
-    fetchTodos();
-    dispatch({ type: 'EMPTY_FORMS' });
   };
 
   // const loginWithGoogle = () => {

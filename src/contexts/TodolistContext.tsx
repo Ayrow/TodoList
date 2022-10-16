@@ -59,7 +59,8 @@ export type TodolistAction =
         | 'MISSING_NEW_TODO'
         | 'UPDATE_EDIT_TODO'
         | 'CLEARED_LIST'
-        | 'EMPTY_TODO_ARRAY';
+        | 'EMPTY_TODO_ARRAY'
+        | 'CLOSE_MODAL';
     }
   | {
       type: 'FETCH_TODOS';
@@ -165,8 +166,7 @@ export const TodolistProvider = ({
   };
 
   const closeModal = () => {
-    state.isModalOpen = false;
-    state.isEditing = false;
+    dispatch({ type: 'CLOSE_MODAL' });
   };
 
   const closeAlert = () => {

@@ -115,6 +115,12 @@ export const TodolistReducer = (
         editID: null,
         todoArray: [],
       };
+    case 'CLOSE_MODAL':
+      return {
+        ...state,
+        isModalOpen: false,
+        isEditing: false,
+      };
     default:
       return state;
   }

@@ -45,7 +45,6 @@ const MyAccount: React.FC = () => {
 
   useEffect(() => {
     fetchUserInfo();
-    console.log(user);
   }, []);
 
   return (
