@@ -45,6 +45,7 @@ const MyAccount: React.FC = () => {
 
   useEffect(() => {
     fetchUserInfo();
+    console.log(user);
   }, []);
 
   return (
@@ -84,7 +85,7 @@ const MyAccount: React.FC = () => {
                   type='text'
                   name='email'
                   className=' rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent'
-                  placeholder={user.email}
+                  placeholder={user.email as string}
                   onChange={(e) =>
                     dispatch({
                       type: 'SET_USER_DATA',
@@ -105,7 +106,7 @@ const MyAccount: React.FC = () => {
                     type='text'
                     name='username'
                     className=' rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent'
-                    placeholder={user.username}
+                    placeholder={user.username as string}
                     value={username}
                     onChange={(e) =>
                       dispatch({

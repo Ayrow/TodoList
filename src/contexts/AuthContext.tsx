@@ -7,7 +7,8 @@ interface IAuthContextProviderProps {
 }
 
 export interface IUserContextType {
-  currentUser: User;
+  currentUser: User | null;
+  setCurrentUser: React.Dispatch<React.SetStateAction<User | null>>;
   handleSignout: () => void;
 }
 
@@ -16,7 +17,7 @@ export const AuthContext = createContext<IUserContextType | undefined>(
 );
 
 export const AuthProvider = ({ children }: IAuthContextProviderProps) => {
-  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
 
   const handleSignout = () => {
     signOut(auth)
@@ -29,13 +30,18 @@ export const AuthProvider = ({ children }: IAuthContextProviderProps) => {
   };
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
+    const listener = onAuthStateChanged(auth, async (user) => {
       setCurrentUser(user);
     });
+
+    return () => {
+      listener();
+    };
   }, []);
 
   return (
-    <AuthContext.Provider value={{ currentUser, handleSignout }}>
+    <AuthContext.Provider
+      value={{ currentUser, setCurrentUser, handleSignout }}>
       {children}
     </AuthContext.Provider>
   );

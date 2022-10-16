@@ -96,39 +96,45 @@ export const TodolistProvider = ({
   const [state, dispatch] = useReducer(TodolistReducer, initialState);
 
   const fetchTodos = async () => {
-    const docRef = doc(db, 'todos', currentUser.uid);
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      dispatch({ type: 'FETCH_TODOS', payload: docSnap.data().todos });
-    } else {
-      console.log('There is no document');
-      return;
+    if (currentUser) {
+      const docRef = doc(db, 'todos', currentUser.uid);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        dispatch({ type: 'FETCH_TODOS', payload: docSnap.data().todos });
+      } else {
+        console.log('There is no document');
+        return;
+      }
     }
   };
 
   const addTodo = async () => {
-    const todosRef = doc(db, 'todos', currentUser.uid);
-    const docSnap = await getDoc(todosRef);
-    if (docSnap.exists()) {
-      await updateDoc(todosRef, {
-        todos: arrayUnion(state.todo),
-      });
-      dispatch({ type: 'ADDING_TODO' });
-    } else {
-      await setDoc(todosRef, {
-        todos: [state.todo],
-      });
-      dispatch({ type: 'ADDING_TODO' });
+    if (currentUser) {
+      const todosRef = doc(db, 'todos', currentUser.uid);
+      const docSnap = await getDoc(todosRef);
+      if (docSnap.exists()) {
+        await updateDoc(todosRef, {
+          todos: arrayUnion(state.todo),
+        });
+        dispatch({ type: 'ADDING_TODO' });
+      } else {
+        await setDoc(todosRef, {
+          todos: [state.todo],
+        });
+        dispatch({ type: 'ADDING_TODO' });
+      }
+      fetchTodos();
     }
-    fetchTodos();
   };
 
   const deleteTodo = async (todoToUpdate: string) => {
-    const todoRef = doc(db, 'todos', currentUser.uid);
-    await updateDoc(todoRef, {
-      todos: arrayRemove(todoToUpdate),
-    });
-    dispatch({ type: 'DELETE_TODO' });
+    if (currentUser) {
+      const todoRef = doc(db, 'todos', currentUser.uid);
+      await updateDoc(todoRef, {
+        todos: arrayRemove(todoToUpdate),
+      });
+      dispatch({ type: 'DELETE_TODO' });
+    }
   };
 
   const editTodo = (item: string, index: number) => {
@@ -148,8 +154,10 @@ export const TodolistProvider = ({
   };
 
   const clearList = async () => {
-    await deleteDoc(doc(db, 'todos', currentUser.uid));
-    dispatch({ type: 'CLEARED_LIST' });
+    if (currentUser) {
+      await deleteDoc(doc(db, 'todos', currentUser.uid));
+      dispatch({ type: 'CLEARED_LIST' });
+    }
   };
 
   const emptyTodoArray = () => {

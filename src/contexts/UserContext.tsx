@@ -77,10 +77,10 @@ const initialState: IUserInitialState = {
 };
 
 interface IUser {
-  profileimage?: string;
-  username: string;
-  email: string;
-  phoneNumber?: string;
+  username: string | null | undefined;
+  email: string | null | undefined;
+  phoneNumber?: string | null | undefined;
+  profileimage?: string | null | undefined;
 }
 
 interface IUserContext {
@@ -108,16 +108,18 @@ export const UserProvider = ({ children }: IUserContextProviderProps) => {
 
   const [isModalReAuthOpen, setIsModalReAuthOpen] = useState(false);
   const [user, setUser] = useState<IUser>({
-    username: '',
-    email: '',
+    username: currentUser?.displayName,
+    email: currentUser?.email,
+    profileimage: currentUser?.photoURL,
+    phoneNumber: currentUser?.phoneNumber,
   });
 
   const createUser = () => {
     createUserWithEmailAndPassword(auth, state.email, state.password)
       .then((userCredential) => {
         const addUserToDb = async () => {
-          if (currentUser) {
-            await setDoc(doc(db, 'users', currentUser.uid), {
+          if (auth.currentUser) {
+            await setDoc(doc(db, 'users', auth.currentUser.uid), {
               username: state.username,
               email: state.email,
             });
@@ -125,7 +127,7 @@ export const UserProvider = ({ children }: IUserContextProviderProps) => {
         };
 
         addUserToDb();
-        // dispatch({ type: 'EMPTY_FORMS' });
+        dispatch({ type: 'EMPTY_FORMS' });
       })
       .catch((error) => {
         if (error.code === 'auth/email-already-in-use') {
@@ -137,7 +139,6 @@ export const UserProvider = ({ children }: IUserContextProviderProps) => {
   const loginUserWithEmailAndPassword = () => {
     signInWithEmailAndPassword(auth, state.email, state.password)
       .then((user) => {
-        console.log(user);
         fetchTodos();
       })
       .catch((error) => {
@@ -147,6 +148,7 @@ export const UserProvider = ({ children }: IUserContextProviderProps) => {
         }
       });
     fetchTodos();
+    dispatch({ type: 'EMPTY_FORMS' });
   };
 
   // const loginWithGoogle = () => {
@@ -231,59 +233,62 @@ export const UserProvider = ({ children }: IUserContextProviderProps) => {
   };
 
   const updateAccount = async (password: string) => {
-    const credential = EmailAuthProvider.credential(
-      currentUser.email as string,
-      password
-    );
+    if (currentUser) {
+      const credential = EmailAuthProvider.credential(
+        currentUser.email as string,
+        password
+      );
+      await reauthenticateWithCredential(auth.currentUser as User, credential);
+      const userRef = doc(db, 'users', currentUser.uid);
 
-    await reauthenticateWithCredential(auth.currentUser as User, credential);
-    const userRef = doc(db, 'users', currentUser.uid);
-
-    if (state.email) {
-      await updateEmail(auth.currentUser as User, state.email)
-        .then(() => {
-          // const userRef = doc(db, 'users', currentUser);
-          updateDoc(userRef, {
-            email: state.email,
+      if (state.email) {
+        await updateEmail(auth.currentUser as User, state.email)
+          .then(() => {
+            // const userRef = doc(db, 'users', currentUser);
+            updateDoc(userRef, {
+              email: state.email,
+            });
+          })
+          .catch((error) => {
+            console.log('error', error);
+            // An error occurred
+            // ...
           });
-        })
-        .catch((error) => {
-          console.log('error', error);
-          // An error occurred
-          // ...
+      }
+      if (state.phoneNumber) {
+        await updateDoc(userRef, {
+          phoneNumber: state.phoneNumber,
         });
+      }
+      if (state.username) {
+        await updateDoc(userRef, {
+          username: state.username,
+        });
+      }
+      setIsModalReAuthOpen(false);
+      dispatch({ type: 'ALERT_UPDATED_ACCOUNT' });
+      fetchUserInfo();
     }
-    if (state.phoneNumber) {
-      await updateDoc(userRef, {
-        phoneNumber: state.phoneNumber,
-      });
-    }
-    if (state.username) {
-      await updateDoc(userRef, {
-        username: state.username,
-      });
-    }
-    setIsModalReAuthOpen(false);
-    dispatch({ type: 'ALERT_UPDATED_ACCOUNT' });
-    fetchUserInfo();
   };
 
   const deleteAccount = async (password: string) => {
-    const credential = EmailAuthProvider.credential(
-      currentUser.email as string,
-      password
-    );
+    if (currentUser) {
+      const credential = EmailAuthProvider.credential(
+        currentUser.email as string,
+        password
+      );
 
-    const result = await reauthenticateWithCredential(
-      auth.currentUser as User,
-      credential
-    );
+      const result = await reauthenticateWithCredential(
+        auth.currentUser as User,
+        credential
+      );
 
-    // Pass result.user here
-    await deleteDoc(doc(db, 'users', currentUser.uid));
-    await deleteDoc(doc(db, 'todos', currentUser.uid));
-    await deleteUser(result.user);
-    console.log('success in deleting your account');
+      // Pass result.user here
+      await deleteDoc(doc(db, 'users', currentUser.uid));
+      await deleteDoc(doc(db, 'todos', currentUser.uid));
+      await deleteUser(result.user);
+      console.log('success in deleting your account');
+    }
   };
 
   const closeAlert = () => {
