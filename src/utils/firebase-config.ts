@@ -3,12 +3,12 @@ import { getFirestore } from 'firebase/firestore';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyBFHUJrB4WQmgBtWnqe-xBjciZVSzBPquM',
-  authDomain: 'todolist-exo.firebaseapp.com',
-  projectId: 'todolist-exo',
-  storageBucket: 'todolist-exo.appspot.com',
-  messagingSenderId: '207224914184',
-  appId: '1:207224914184:web:c896d733ab3512b1c16cbd',
+  apiKey: process.env.API_KEY,
+  authDomain: process.env.AUTH_DOMAIN,
+  projectId: process.env.PROJECT_ID,
+  storageBucket: process.env.STORAGE_BUCKET,
+  messagingSenderId: process.env.MESSAGING_SENDER_ID,
+  appId: process.env.APPID,
 };
 
 // Initialize Firebase
