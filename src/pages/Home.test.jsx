@@ -4,16 +4,12 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import Home from './Home';
 
 describe('testing homepage', () => {
-  test('button in homepage redirect to create account page', () => {
+  test('button in homepage redirect to create account page if not loggedin', async () => {
     const user = userEvent.setup();
-    render(
-      <Router>
-        <Home />
-      </Router>
-    );
+    render(<Home />, { wrapper: Router });
 
     const startTodolistBtn = screen.getByRole('link', {
-      name: /start a todolist/i,
+      name: 'Start a todolist',
     });
     expect(startTodolistBtn).toBeInTheDocument();
   });

@@ -7,7 +7,8 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import Login from './Login';
 
 describe('Testing the login page', () => {
-  test('user can type in email input', () => {
+  test('user can type in email input', async () => {
+    const user = userEvent.setup();
     render(
       <AuthProvider>
         <TodolistProvider>
@@ -20,12 +21,13 @@ describe('Testing the login page', () => {
       </AuthProvider>
     );
     const emailInput = screen.getByRole('textbox');
-    userEvent.type(emailInput, 'aymeric@gmail.com');
+    await user.type(emailInput, 'aymeric@gmail.com');
 
     expect(emailInput).toHaveValue('aymeric@gmail.com');
   });
 
-  test('user can type password and show/hide password', () => {
+  test('user can type password and show/hide password', async () => {
+    const user = userEvent.setup();
     render(
       <AuthProvider>
         <TodolistProvider>
@@ -38,7 +40,7 @@ describe('Testing the login page', () => {
       </AuthProvider>
     );
     const passwordInput = screen.getByPlaceholderText(/your password/i);
-    userEvent.type(passwordInput, 'azerty');
+    await user.type(passwordInput, 'azerty');
     expect(passwordInput).toHaveAttribute('type', 'password');
 
     expect(passwordInput).toHaveValue('azerty');
@@ -46,10 +48,10 @@ describe('Testing the login page', () => {
     const showBtn = screen.getByRole('button', {
       name: /show/i,
     });
-    userEvent.click(showBtn);
+    await user.click(showBtn);
     expect(passwordInput).toHaveAttribute('type', 'text');
 
-    userEvent.click(showBtn);
+    await user.click(showBtn);
     expect(passwordInput).toHaveAttribute('type', 'password');
   });
 });
